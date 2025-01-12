@@ -1,0 +1,110 @@
+﻿@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "Regsiter";
+}
+
+@* <div class="row">
+    <div class="col-6">
+        <form asp-controller="Accounts" asp-action="Register">
+            <div class="form-group">
+                <label asp-for="UserName" class="form-label"></label>
+                <input asp-for="UserName" class="form-control"/>
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmPassword" class="form-label"></label>
+                <input asp-for="ConfirmPassword" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="form-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="form-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+
+            </div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group my-3">
+                <button type="submit" value="Register" class="btn btn-primary">Register</button>
+            </div>
+        </form>
+    </div>
+</div>
+*@
+
+<div class="row align-items-center justify-content-center ">
+    <div class="col-10 col-lg-6 col-xl-4 border rounded p-4">
+        <h1 class="my-4">Register</h1>
+        <form asp-controller="Accounts" asp-action="Register">
+            <div class="form-group my-3">
+                <input asp-for="UserName" class="form-control py-2" placeholder="Username" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <input asp-for="Email" class="form-control py-2" placeholder="Email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <input asp-for="Password" class="form-control py-2" placeholder="Password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <input asp-for="ConfirmPassword" class="form-control py-2" placeholder="ConfirmPassword" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <input asp-for="PhoneNumber" class="form-control py-2" placeholder="Phone" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <input asp-for="Address" class="form-control py-2" placeholder="Address" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+
+            
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group my-3">
+                <button type="submit" value="Login" class="btn btn-primary w-100">Register</button>
+            </div>
+            <div class="text-center my-2 text-dark">- OR -</div>
+            <div class="form-group my-2 ">
+                <a href="#" class="btn btn-block btn-primary w-100">
+                    <i class="fab fa-facebook mr-2"></i> Sign up using Facebook
+                </a>
+            </div>
+            <div class="form-group my-2 text-center">
+                <a href="#" class="btn btn-block btn-danger w-100">
+                    <i class="fab fa-google-plus mr-2"></i> Sign up using Google+
+                </a>
+            </div>
+            <div class="text-center mt-3 ">
+                already have an account?
+                <a asp-controller="Accounts" asp-action="Login" class="text-decoration-none">Click here</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+}
+@section Styles {
+    <link rel="stylesheet" href="~/Dashboard/plugins/fontawesome-free/css/all.min.css">
+}

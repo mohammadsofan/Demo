@@ -1,0 +1,61 @@
+﻿<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<!-- Buttons extension JS -->
+
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+<!-- Column Visibility Script -->
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
+
+<!-- FileSaver.js for exporting PDFs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script>
+
+    
+    $(document).ready(function () {
+        $('table').DataTable({
+            dom: 'Blfrtip', // Enable the buttons
+            buttons: [
+                {
+                    extend: 'print',
+                    className: 'btn btn-primary py-1 m-1',
+                    text: '<i class="fas fa-print"></i> Print' // text is optional
+                },
+                {
+                    extend: 'copy',
+                    className: 'btn btn-primary py-1 m-1',
+                    text: '<i class="fas fa-copy"></i> Copy' // text is optional
+                },
+                {
+                    extend: 'csv',
+                    className: 'btn btn-primary py-1 m-1',
+                    text: '<i class="fas fa-file"></i> CSV' // text is optional
+                },
+                {
+                    extend: 'excel',
+                    className: 'btn btn-primary py-1 m-1',
+                    text: '<i class="fas fa-file-excel"></i> Excel' // text is optional
+                },
+                {
+                    extend: 'pdf',
+                    className: 'btn btn-primary py-1 m-1',
+                    text: '<i class="fas fa-file-pdf"></i> PDF' // text is optional
+                },
+                {
+                    extend: 'colvis',
+                    className: 'btn btn-primary py-1 m-1', // Custom button styling
+                    text: '<i class="fas fa-columns"></i> Column Visibility',
+                    
+                }// Add desired buttons
+            ]
+        });
+      
+
+    });
+   
+   
+</script>

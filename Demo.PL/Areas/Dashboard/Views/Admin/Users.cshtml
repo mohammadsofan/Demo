@@ -1,0 +1,67 @@
+﻿@model IEnumerable<UserViewModel>
+@{
+    ViewData["Title"] = "Users";
+    ViewData["HeaderTitle"] = "Users";
+
+}
+
+<div class="col-12">
+    @if (Model.Any())
+    {
+
+        <h1 class="text-primary mb-3">Users</h1>
+        <div class="card p-2">
+            <div class="card-header">
+                <h3 class="card-title">Users</h3>
+            </div>
+            <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(user => user.UserName)</th>
+                            <th>@Html.DisplayNameFor(user => user.Email)</th>
+                            <th>@Html.DisplayNameFor(user => user.PhoneNumber)</th>
+                            <th>@Html.DisplayNameFor(user => user.Address)</th>
+                            <th>@Html.DisplayNameFor(user => user.CreatedAt)</th>
+                            <th>@Html.DisplayNameFor(user => user.RolesList)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.UserName</td>
+                                <td>@item.Email</td>
+                                <td>@item.PhoneNumber</td>
+                                <td>@item.Address</td>
+                                <td>@item.CreatedAt.ToLocalTime()</td>
+                                <td>@string.Join(",", @item.RolesList)</td>
+                                <td>
+                                    <a class="btn btn-success btn-sm" asp-controller="Admin" asp-action="EditUserRole" asp-route-Id="@item.Id">
+                                        <i class="fas fa-edit">
+                                        </i>
+                                        Edit Role
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info d-block">there is no users.</div>
+    }
+</div>
+
+@section Styles {
+    <partial name="_DatatablesStyles" />
+}
+@section Scripts {
+
+    <partial name="_DatatablesScripts" />
+
+}

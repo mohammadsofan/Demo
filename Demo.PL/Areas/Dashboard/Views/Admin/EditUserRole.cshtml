@@ -1,0 +1,36 @@
+﻿@model EditUserRoleViewModel
+@{
+    ViewData["Title"] = "EditUserRole";
+    ViewData["HeaderTitle"] = "EditUserRole";
+}
+<div class="col-md-6">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Edit User Role</h3>
+        </div>
+        <form asp-area="Dashboard" asp-controller="Admin" asp-action="EditUserRole">
+            <div class="card-body">
+                <div class="form-group">
+                    <label asp-for="UserName" class="form-label"></label>
+                    <input asp-for="UserName" class="form-control" disabled />
+                </div>
+                <input asp-for="Id" type="hidden" />
+                <div class="form-group">
+                    <label asp-for="SelectedRole" class="form-label"></label>
+                    <select asp-for="SelectedRole" class="form-control" asp-items="Model.Roles"></select>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> Edit</button>
+                <a class="btn btn-danger btn-sm" asp-controller="Admin" asp-action="Users">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

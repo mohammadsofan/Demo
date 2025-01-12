@@ -1,0 +1,50 @@
+﻿@model IEnumerable<RoleViewModel>
+@{
+    ViewData["Title"] = "Roles";
+    ViewData["HeaderTitle"] = "Roles";
+
+}
+
+
+<div class="col-12">
+    @if (Model.Any())
+    {
+
+    <h1 class="text-primary mb-3">Roles</h1>
+    <div class="card p-2">
+        <div class="card-header">
+                <h3 class="card-title">Roles</h3>
+        </div>
+        <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(r => r.Name)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>
+                                    <a class="btn btn-danger btn-sm" asp-controller="Admin" asp-action="DeleteRole" asp-route-id="@item.Id">
+                                        <i class="fas fa-trash">
+                                        </i>
+                                        Delete
+                                    </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    }
+    else
+    {
+        <div class="alert alert-info d-block">there is no roles.</div>
+    }
+</div>
+
