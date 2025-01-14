@@ -1,0 +1,38 @@
+﻿@model SubCategoryViewModel
+@{
+    ViewData["Title"] = "Category - DeleteSubCategory";
+    ViewData["HeaderTitle"] = "DeleteSubCategory";
+    ViewData["Controller"] = "Categories";
+
+}
+
+<div class="col-12 col-sm-6">
+    <div class="card card-danger">
+        <div class="card-header">
+            <h3 class="card-title">Delete Sub Category</h3>
+        </div>
+        <div class="card-body">
+            <p>Are you sure you want to delete @Model.Name sub category?</p>
+        </div>
+        <div class="card-footer">
+            <div class="content d-flex justify-content-end">
+
+                <form asp-controller="Categories" asp-action="ConfirmDeleteSubCategory">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="CategoryId" />
+                    <div class="form-group">
+                        <button class="btn px-2 py-1 btn-danger" type="submit">
+                            Delete
+                        </button>
+                        <a asp-controller="Categories" asp-action="Details" asp-route-id="@Model.CategoryId" class="btn px-2 py-1 btn-secondary">
+                            Cancel
+                        </a>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>

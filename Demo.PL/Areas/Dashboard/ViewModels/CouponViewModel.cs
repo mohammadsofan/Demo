@@ -1,23 +1,18 @@
 ﻿using Demo.DAL.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Demo.DAL.Models;
 
-namespace Demo.DAL.Models
+namespace Demo.PL.Areas.Dashboard.ViewModels
 {
-    public class Coupon
+    public class CouponViewModel
     {
         public Guid Id { get; set; }
         public string Code { get; set; } = null!;
         public DiscountType Type { get; set; }
         public double Discount { get; set; }
         public bool Status { get; set; }
-        public DateTime CreatedAt { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        public ICollection<Order> Orders { get; set; } = null!;
     }
 }

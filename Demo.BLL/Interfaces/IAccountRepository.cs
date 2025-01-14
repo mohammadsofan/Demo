@@ -16,11 +16,11 @@ namespace Demo.BLL.Interfaces
         Task<IdentityResult> CreateRole(string Name);
         Task<IdentityResult> AssignUserRole(ApplicationUser user,string roleName);
         IEnumerable<IdentityRole> GetRoles();
-        Task<IdentityRole> GetRole(string id);
+        Task<IdentityRole?> GetRole(string id);
         Task<IEnumerable<string>> GetUserRoles(ApplicationUser user);
         Task<IdentityResult> DeleteRole(string id);
         IEnumerable<ApplicationUser> GetUsers();
-        Task<ApplicationUser> GetUser(string id);
+        Task<ApplicationUser?> GetUser(string id);
 
 
     }

@@ -1,0 +1,107 @@
+﻿@model CreateCouponViewModel
+@{
+    ViewData["Title"] = "Coupons - create";
+    ViewData["HeaderTitle"] = "CreateCoupon";
+    ViewData["Controller"] = "Coupons";
+
+}
+<div class="col-md-6">
+
+    <a asp-controller="Coupons" asp-action="Index" class="btn btn-secondary mb-2">
+        <i class="fa fa-sm fa-chevron-left"></i>
+        Back to list
+    </a>
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Create Coupon</h3>
+        </div>
+        <form asp-area="Dashboard" asp-controller="Coupons" asp-action="Create">
+            <div class="card-body">
+                <div class="form-group">
+                    <label asp-for="Code"></label>
+                    <input asp-for="Code" class="form-control" placeholder="Code..">
+                    <span asp-validation-for="Code" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SelectedType"></label>
+                    <select asp-for="SelectedType" class="form-control" asp-items="@Model.Types"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Discount"></label>
+                    <input asp-for="Discount" class="form-control" placeholder="Discount..">
+                    <span asp-validation-for="Discount" class="text-danger"></span>
+                    <div class="text-info">Hint: if percentage, Input range (0.00 - 1.00)</div>
+                </div>
+                <div class="form-group">
+                    <label for="StartDate">Start Date</label>
+                    <div class="input-group date" id="StartDate" data-target-input="nearest">
+                        <input asp-for="StartDate" type="text" class="form-control datetimepicker-input" data-target="#StartDate" />
+                        <div class="input-group-append" data-target="#StartDate" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="EndDate">End Date</label>
+                    <div class="input-group date" id="EndDate" data-target-input="nearest">
+                        <input asp-for="EndDate" type="text" class="form-control datetimepicker-input" data-target="#EndDate" />
+                        <div class="input-group-append" data-target="#EndDate" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                </div>
+                <div class="custom-control custom-checkbox">
+                    <input class="custom-control-input" type="checkbox" asp-for="Status">
+                    <label asp-for="Status" class="custom-control-label">Active</label>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+@section Styles{
+    <partial name="_DateTimePickerStyles" />
+}
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_DateTimePickerScripts" />
+    <script>
+        $(document).ready(function () {
+            $('#StartDate').datetimepicker({
+                format: 'YYYY-MM-DD HH:mm', // Adjust the format as needed
+                icons: {
+                    time: 'far fa-clock',
+                    date: 'far fa-calendar',
+                    up: 'fas fa-arrow-up',
+                    down: 'fas fa-arrow-down',
+                    previous: 'fas fa-chevron-left',
+                    next: 'fas fa-chevron-right',
+                    today: 'far fa-calendar-check',
+                    clear: 'fas fa-trash',
+                    close: 'fas fa-times'
+                }
+            });
+            $('#EndDate').datetimepicker({
+                format: 'YYYY-MM-DD HH:mm', // Adjust the format as needed
+                icons: {
+                    time: 'far fa-clock',
+                    date: 'far fa-calendar',
+                    up: 'fas fa-arrow-up',
+                    down: 'fas fa-arrow-down',
+                    previous: 'fas fa-chevron-left',
+                    next: 'fas fa-chevron-right',
+                    today: 'far fa-calendar-check',
+                    clear: 'fas fa-trash',
+                    close: 'fas fa-times'
+                }
+            });
+        });
+      
+    </script>
+}

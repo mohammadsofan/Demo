@@ -16,6 +16,8 @@ namespace Demo.PL.Mapping
             CreateMap<Category, CategoryViewModel>();
             CreateMap<CategoryViewModel, Category>();
             CreateMap<SubCategoryViewModel, SubCategory>();
+            CreateMap<SubCategory, SubCategoryViewModel>();
+            CreateMap<Coupon, CouponViewModel>();
         }
     }
 }

@@ -16,7 +16,8 @@ namespace Demo.PL.Areas.Dashboard.Controllers
         private readonly ISubCategoryRepository subCategoryRepository;
         private readonly IMapper mapper;
 
-        public CategoriesController(ICategoryRespository categoryRespository,ISubCategoryRepository subCategoryRepository,IMapper mapper) {
+        public CategoriesController(ICategoryRespository categoryRespository, ISubCategoryRepository subCategoryRepository, IMapper mapper)
+        {
             this.categoryRespository = categoryRespository;
             this.subCategoryRepository = subCategoryRepository;
             this.mapper = mapper;
@@ -32,7 +33,7 @@ namespace Demo.PL.Areas.Dashboard.Controllers
             try
             {
                 var categories = await categoryRespository.GetAll();
-                var categoriesVM=mapper.Map<IEnumerable<CategoryViewModel>>(categories);
+                var categoriesVM = mapper.Map<IEnumerable<CategoryViewModel>>(categories);
                 return View(categoriesVM);
             }
             catch (InvalidOperationException ex)
@@ -54,10 +55,10 @@ namespace Demo.PL.Areas.Dashboard.Controllers
                 if (ModelState.IsValid)
                 {
                     var category = mapper.Map<Category>(model);
-                    category.Id= Guid.NewGuid();
+                    category.Id = Guid.NewGuid();
                     category.CreatedAt = DateTime.UtcNow;
-                    
-                    var result =await categoryRespository.Create(category);
+
+                    var result = await categoryRespository.Create(category);
                     if (result == 1)
                     {
                         return RedirectToAction(nameof(Index));
@@ -83,7 +84,7 @@ namespace Demo.PL.Areas.Dashboard.Controllers
         public async Task<IActionResult> Edit(Guid id)
         {
             var category = await categoryRespository.Get(id);
-            var categoryVM = mapper.Map<CategoryViewModel>(category);   
+            var categoryVM = mapper.Map<CategoryViewModel>(category);
             return View(categoryVM);
         }
         [HttpPost]
@@ -123,13 +124,13 @@ namespace Demo.PL.Areas.Dashboard.Controllers
         {
             try
             {
-                if(id is null)
+                if (id is null)
                 {
                     return BadRequest();
                 }
 
                 var category = await categoryRespository.Get(id.Value);
-                if(category is null)
+                if (category is null)
                 {
                     return NotFound();
                 }
@@ -145,12 +146,13 @@ namespace Demo.PL.Areas.Dashboard.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirm(CategoryViewModel model)
         {
-            try{
+            try
+            {
                 var category = mapper.Map<Category>(model);
                 await categoryRespository.Delete(category);
                 return RedirectToAction(nameof(Index));
             }
-            catch(InvalidOperationException ex)
+            catch (InvalidOperationException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -160,19 +162,19 @@ namespace Demo.PL.Areas.Dashboard.Controllers
         {
             try
             {
-                if(id is null)
+                if (id is null)
                 {
                     return BadRequest();
                 }
                 var category = await categoryRespository.Details(id.Value);
-                if(category is null)
+                if (category is null)
                 {
                     return NotFound();
                 }
 
                 var categoryDetailsVM = new CategoryDetailsViewModel()
                 {
-                    Id=category.Id,
+                    Id = category.Id,
                     Name = category.Name,
                     Description = category.Description,
                     CreatedAt = category.CreatedAt,
@@ -193,11 +195,20 @@ namespace Demo.PL.Areas.Dashboard.Controllers
             }
         }
 
-        public async Task<IActionResult> CreateSubCategory(Guid id) {
-            var category = await categoryRespository.Get(id);
+        public async Task<IActionResult> CreateSubCategory(Guid? id)
+        {
+            if (id is null)
+            {
+                return BadRequest();
+            }
+            var category = await categoryRespository.Get(id.Value);
+            if (category is null)
+            {
+                return NotFound();
+            }
             var model = new SubCategoryViewModel()
             {
-               CategoryId=id,
+                CategoryId = id.Value,
             };
             ViewBag.CategoryName = category.Name;
             return View(model);
@@ -210,17 +221,17 @@ namespace Demo.PL.Areas.Dashboard.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                   var subCategory = mapper.Map<SubCategory>(model);
-                   subCategory.CreatedAt = DateTime.UtcNow;
-                   subCategory.Id = Guid.NewGuid();
-                   var result =  await subCategoryRepository.Create(subCategory);
-                    if(result == 1)
+                    var subCategory = mapper.Map<SubCategory>(model);
+                    subCategory.CreatedAt = DateTime.UtcNow;
+                    subCategory.Id = Guid.NewGuid();
+                    var result = await subCategoryRepository.Create(subCategory);
+                    if (result == 1)
                     {
-                        return RedirectToAction(nameof(Details),new { id=model.CategoryId});
+                        return RedirectToAction(nameof(Details), new { id = model.CategoryId });
                     }
                     else
                     {
-                        var category= await categoryRespository.Get(model.CategoryId);
+                        var category = await categoryRespository.Get(model.CategoryId);
                         ViewBag.CategoryName = category.Name;
                         ModelState.AddModelError("Name", "this name already exists.");
                         return View(model);
@@ -236,6 +247,101 @@ namespace Demo.PL.Areas.Dashboard.Controllers
                 return BadRequest(ex.Message);
             }
 
+        }
+
+        public async Task<IActionResult> DeleteSubCategory(Guid? id)
+        {
+            try
+            {
+                if (id is null)
+                {
+                    return BadRequest();
+                }
+                var subCategory = await subCategoryRepository.Get(id.Value);
+                if (subCategory is null)
+                {
+                    return NotFound();
+                }
+                var subCategoryVM = mapper.Map<SubCategoryViewModel>(subCategory);
+
+                return View(subCategoryVM);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmDeleteSubCategory(SubCategoryViewModel model)
+        {
+            try
+            {
+                var subCategory = mapper.Map<SubCategory>(model);
+                await subCategoryRepository.Delete(subCategory);
+                return RedirectToAction(nameof(Details), new { id = model.CategoryId });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        public async Task<IActionResult> EditSubCategory(Guid? id,string categoryName)
+        {
+            try
+            {
+                if (id is null)
+                {
+                    return BadRequest();
+                }
+                var subCategory = await subCategoryRepository.Get(id.Value);
+                if (subCategory is null)
+                {
+                    return NotFound();
+                }
+                var subCategoryVM = mapper.Map<SubCategoryViewModel>(subCategory);
+                ViewBag.categoryName = categoryName;
+                return View(subCategoryVM);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditSubCategory(SubCategoryViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var subCategory = mapper.Map<SubCategory>(model);
+                    var result = await subCategoryRepository.Update(subCategory);
+                    if (result == 1)
+                    {
+                        return RedirectToAction(nameof(Details), new { id = model.CategoryId });
+                    }
+                    else
+                    {
+                        var category = await categoryRespository.Get(model.CategoryId);
+                        ViewBag.categoryName = category.Name;
+
+                        ModelState.AddModelError("Name", "this name already exists.");
+                        return View(model);
+
+                    }
+                }
+                else
+                {
+                    return View(model);
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

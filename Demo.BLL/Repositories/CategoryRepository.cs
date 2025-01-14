@@ -53,7 +53,7 @@ namespace Demo.BLL.Repositories
             }
         }
 
-        public async Task<IEnumerable<Category>> GetAll()
+        public async Task<IEnumerable<Category?>> GetAll()
         {
             try
             {
@@ -64,7 +64,7 @@ namespace Demo.BLL.Repositories
                 throw new InvalidOperationException("An error occurred while retrieving the categories. Please try again later.", ex);
             }
         }
-        public async Task<Category> Get(Guid id)
+        public async Task<Category?> Get(Guid id)
         {
             try
             {

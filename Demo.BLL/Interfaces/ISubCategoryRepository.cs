@@ -9,8 +9,8 @@ namespace Demo.BLL.Interfaces
 {
     public interface ISubCategoryRepository
     {
-        Task<IEnumerable<SubCategory>> GetAll();
-        Task<SubCategory> Get(Guid id);
+        Task<IEnumerable<SubCategory?>> GetAll();
+        Task<SubCategory?> Get(Guid id);
         Task<int> Create(SubCategory category);
         Task<int> Update(SubCategory category);
         Task<Guid> Delete(SubCategory category);

@@ -102,7 +102,7 @@ namespace Demo.BLL.Repositories
                 throw new InvalidOperationException("An error occurred while attempting to get the roles.", ex);
             }
         }
-        public async Task<IdentityRole> GetRole(string id)
+        public async Task<IdentityRole?> GetRole(string id)
         {
             try
             {
@@ -154,7 +154,7 @@ namespace Demo.BLL.Repositories
                 throw new InvalidOperationException("An error occurred while attempting to get the users.", ex);
             }
         }
-        public async Task<ApplicationUser> GetUser(string id)
+        public async Task<ApplicationUser?> GetUser(string id)
         {
             try
             {
