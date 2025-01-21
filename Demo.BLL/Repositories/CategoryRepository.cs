@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Demo.BLL.Repositories
 {
-    public class CategoryRepository : ICategoryRespository
+    public class CategoryRepository : ICategoryRepository
     {
         private readonly ApplicationDbContext dbContext;
 

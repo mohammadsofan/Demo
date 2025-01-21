@@ -1,0 +1,35 @@
+﻿@model CreateProductViewModel
+@{
+    ViewData["Title"] = "Products - Edit";
+    ViewData["HeaderTitle"] = "EditProduct";
+    ViewData["Controller"] = "Products";
+
+}
+<div class="col-md-6">
+
+    <a asp-controller="Products" asp-action="Index" class="btn btn-secondary mb-2">
+        <i class="fa fa-sm fa-chevron-left"></i>
+        Back to list
+    </a>
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Create Category</h3>
+        </div>
+        <form asp-area="Dashboard" asp-controller="Products" asp-action="Edit">
+            <div class="card-body">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="CreatedAt" />
+                <partial name="_ProductForm" />
+            </div>
+            <div class="card-footer">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <button type="submit" class="btn btn-primary">Edit</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

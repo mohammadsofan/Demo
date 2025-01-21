@@ -58,6 +58,29 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item @(ViewData["Controller"]?.ToString() == "Products"?"menu-open":"")">
+                    <a href="#" class="nav-link  @(ViewData["Controller"]?.ToString()=="Products"?"active":"")">
+                        <i class="nav-icon fas fa-list"></i>
+                        <p>
+                            Products
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item ">
+                            <a asp-controller="Products" asp-action="Index" asp-route-id="@null" class="nav-link @(ViewData["HeaderTitle"]?.ToString()=="Products"?"active":"")">
+                                <i class="@(ViewData["HeaderTitle"]?.ToString()=="Products"?"fas":"far")  fa-circle nav-icon"></i>
+                                <p>Show All</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Products" asp-action="Create" class="nav-link @(ViewData["HeaderTitle"]?.ToString()=="CreateProduct"?"active":"")">
+                                <i class="@(ViewData["HeaderTitle"]?.ToString()=="CreateProduct"?"fas":"far")  fa-circle nav-icon"></i>
+                                <p>Create</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-item @(ViewData["Controller"]?.ToString() == "Coupons"?"menu-open":"")">
                     <a href="#" class="nav-link  @(ViewData["Controller"]?.ToString()=="Coupons"?"active":"")">
                         <i class="nav-icon fas fa-list"></i>

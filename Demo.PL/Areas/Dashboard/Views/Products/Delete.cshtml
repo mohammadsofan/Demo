@@ -1,8 +1,8 @@
 ﻿@model Guid
 @{
-    ViewData["Title"] = "Category - Delete";
-    ViewData["HeaderTitle"] = "DeleteCategory";
-    ViewData["Controller"] = "Categories";
+    ViewData["Title"] = "Product - Delete";
+    ViewData["HeaderTitle"] = "DeleteProduct";
+    ViewData["Controller"] = "Products";
 
 }
 
@@ -12,17 +12,17 @@
             <h3 class="card-title">Delete Category</h3>
         </div>
         <div class="card-body">
-            <p>Are you sure you want to delete @ViewBag.CategoryName category?</p>
+            <p>Are you sure you want to delete @ViewBag.ProductName product?</p>
         </div>
         <div class="card-footer">
             <div class="content d-flex justify-content-end">
 
-                <form asp-controller="Categories" asp-action="DeleteConfirm" asp-route-id="@Model">
+                <form asp-controller="Products" asp-action="DeleteConfirm" asp-route-id="@Model">
                     <div class="form-group">
                         <button class="btn px-2 py-1 btn-danger" type="submit">
                             Delete
                         </button>
-                        <a asp-controller="Categories" asp-action="Index" class="btn px-2 py-1 btn-secondary">
+                        <a asp-controller="Products" asp-action="Index" asp-route-id="@ViewBag.CategoryId" class="btn px-2 py-1 btn-secondary">
                             Cancel
                         </a>
                     </div>

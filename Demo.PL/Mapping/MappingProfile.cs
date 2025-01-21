@@ -10,14 +10,11 @@ namespace Demo.PL.Mapping
     {
         public MappingProfile() {
             CreateMap<RegisterViewModel, ApplicationUser>();
-            CreateMap<IdentityRole, RoleViewModel>();
-            CreateMap<RoleViewModel, IdentityRole>();
+            CreateMap<IdentityRole, RoleViewModel>().ReverseMap();
             CreateMap<ApplicationUser, UserViewModel>();
-            CreateMap<Category, CategoryViewModel>();
-            CreateMap<CategoryViewModel, Category>();
-            CreateMap<SubCategoryViewModel, SubCategory>();
-            CreateMap<SubCategory, SubCategoryViewModel>();
-            CreateMap<Coupon, CouponViewModel>();
+            CreateMap<Category, CategoryViewModel>().ReverseMap();
+            CreateMap<SubCategoryViewModel, SubCategory>().ReverseMap();
+            CreateMap<Coupon, CouponViewModel>().ReverseMap();
         }
     }
 }

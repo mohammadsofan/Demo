@@ -2,6 +2,7 @@ using Demo.BLL.Interfaces;
 using Demo.BLL.Repositories;
 using Demo.DAL.Data;
 using Demo.DAL.Models;
+using Demo.PL.Areas.Dashboard.Services;
 using Demo.PL.Mapping;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -28,9 +29,13 @@ namespace Demo.PL
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-            builder.Services.AddScoped<ICategoryRespository, CategoryRepository>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
             builder.Services.AddScoped<ICouponRepository, CouponRepository>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IImageRepository, ImageRepository>();
+            builder.Services.AddScoped<CouponService>(); 
+            builder.Services.AddScoped<ProductService>(); 
             builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(MappingProfile)));
             var app = builder.Build();
             // Configure the HTTP request pipeline.

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Demo.DAL.Models
 {
@@ -16,11 +17,11 @@ namespace Demo.DAL.Models
         public int Quantity { get; set; }
         public bool InPublish { get; set; }
         public DateTime CreatedAt { get; set; }
-
         public Guid SubCategoryId { get; set; }
         public SubCategory SubCategory { get; set; } = null!;
+        public ICollection<Image> Images { get; set; } = null!;
         public ICollection<CartItem> CartItems { get; set; } = null!;
-        public ICollection<OrderItem> OrderItems { get; } = null!;
+        public ICollection<OrderItem> OrderItems { get; set; } = null!;
 
     }
 }

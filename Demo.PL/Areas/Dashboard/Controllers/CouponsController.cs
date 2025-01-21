@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Demo.BLL.Interfaces;
+using Demo.BLL.Repositories;
 using Demo.DAL.Enums;
 using Demo.DAL.Models;
+using Demo.PL.Areas.Dashboard.Services;
 using Demo.PL.Areas.Dashboard.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,12 +16,19 @@ namespace Demo.PL.Areas.Dashboard.Controllers
     public class CouponsController : Controller
     {
         private readonly ICouponRepository couponRepository;
+        private readonly CouponService couponService;
         private readonly IMapper mapper;
 
-        public CouponsController(ICouponRepository couponRepository,IMapper mapper)
+        public CouponsController(ICouponRepository couponRepository,CouponService couponService,IMapper mapper)
         {
             this.couponRepository = couponRepository;
+            this.couponService = couponService;
             this.mapper = mapper;
+        }
+        [HttpGet("/Dashboard/Coupons")]
+        public IActionResult RedirectToIndex()
+        {
+            return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Index()
         {
@@ -38,52 +47,23 @@ namespace Demo.PL.Areas.Dashboard.Controllers
         {
             var coupon = new CreateCouponViewModel()
             {
-                Types = GetDiscountTypes(),
+                Types = couponService.GetDiscountTypes(),
             };
             return View(coupon);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> Create(CreateCouponViewModel model)
         {
             try
             {
-                if (!ModelState.IsValid)
+                if (!couponService.ValidateCoupon(model, out var discountType,ModelState))
                 {
-                    model.Types = GetDiscountTypes();
                     return View(model);
                 }
 
-                if (!Enum.TryParse<DiscountType>(model.SelectedType.ToString(), out var discountType))
-                {
-                    model.Types = GetDiscountTypes();
-                    return View(model);
-                }
-
-                if (discountType == DiscountType.Percentage && (model.Discount < 0 || model.Discount > 1))
-                {
-                    ModelState.AddModelError("Discount", "Value must be between 0.00 and 1.00");
-                    model.Types = GetDiscountTypes();
-                    return View(model);
-                }
-                if (model.EndDate.CompareTo(model.StartDate) <= 0)
-                {
-                    ModelState.AddModelError("EndDate", "End Date is same or earlier than Start Date");
-                    model.Types = GetDiscountTypes();
-                    return View(model);
-                }
-
-                var coupon = new Coupon
-                {
-                    Id = Guid.NewGuid(),
-                    Code = model.Code,
-                    Type = discountType,
-                    Discount = model.Discount,
-                    Status=model.Status,
-                    StartDate=model.StartDate.ToUniversalTime(),
-                    EndDate=model.EndDate.ToUniversalTime(),
-                    CreatedAt = DateTime.UtcNow
-                };
+                var coupon = couponService.MapToCoupon(model, discountType, isNew: true);
 
                 var result = await couponRepository.Create(coupon);
 
@@ -93,31 +73,105 @@ namespace Demo.PL.Areas.Dashboard.Controllers
                 }
 
                 ModelState.AddModelError("Code", "This code is already used");
-                model.Types = GetDiscountTypes();
+                model.Types = couponService.GetDiscountTypes();
                 return View(model);
             }
             catch (InvalidOperationException ex)
             {
                 return BadRequest(ex.Message);
             }
-
         }
 
-        private List<SelectListItem> GetDiscountTypes()
+
+        public async Task<IActionResult> Delete(Guid? id)
         {
-            return new List<SelectListItem>
+            try
+            {
+                if (id is null)
                 {
-                    new SelectListItem
-                    {
-                        Value = DiscountType.Percentage.ToString(),
-                        Text = nameof(DiscountType.Percentage)
-                    },
-                    new SelectListItem
-                    {
-                        Value = DiscountType.FixedAmount.ToString(),
-                        Text = nameof(DiscountType.FixedAmount)
-                    }
-                };
+                    return BadRequest();
+                }
+
+                var coupon = await couponRepository.Get(id.Value);
+                if (coupon is null)
+                {
+                    return NotFound();
+                }
+                ViewBag.CouponCode=coupon.Code;
+                return View(id);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirm(Guid? id)
+        {
+            try
+            {
+                if (id is null)
+                {
+                    return BadRequest();
+                }
+
+                var coupon = await couponRepository.Get(id.Value);
+                if (coupon is null)
+                {
+                    return NotFound();
+                }
+                await couponRepository.Delete(coupon);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        public async Task<IActionResult> Edit(Guid? id)
+        {
+            if(id is null)
+            {
+                return BadRequest();
+            }
+            var coupon = await couponRepository.Get(id.Value);
+            if(coupon is null)
+            {
+                return NotFound();
+            }
+            var couponVM = couponService.MapToCreateCouponVM(coupon);
+            return View(couponVM);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(CreateCouponViewModel model)
+        {
+            try
+            {
+                if (!couponService.ValidateCoupon(model, out var discountType,ModelState))
+                {
+                    return View(model);
+                }
+
+                var coupon = couponService.MapToCoupon(model, discountType);
+
+                var result = await couponRepository.Update(coupon);
+
+                if (result == 1)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+
+                ModelState.AddModelError("Code", "This code is already used");
+                model.Types = couponService.GetDiscountTypes();
+                return View(model);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
     }

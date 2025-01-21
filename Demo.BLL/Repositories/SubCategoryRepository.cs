@@ -63,6 +63,17 @@ namespace Demo.BLL.Repositories
                 throw new InvalidOperationException("An error occurred while retrieving the subCategories. Please try again later.", ex);
             }
         }
+        public async Task<IEnumerable<SubCategory?>> GetAllWithCategory()
+        {
+            try
+            {
+                return await dbContext.SubCategories.AsNoTracking().Include(sc=>sc.Category).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("An error occurred while retrieving the subCategories. Please try again later.", ex);
+            }
+        }
         public async Task<SubCategory?> Get(Guid id)
         {
             try

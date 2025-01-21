@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Demo.BLL.Interfaces
 {
-    public interface ICategoryRespository
+    public interface ICategoryRepository
     {
         Task<IEnumerable<Category?>> GetAll();
         Task<Category?> Get(Guid id);
