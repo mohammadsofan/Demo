@@ -1,0 +1,63 @@
+﻿<script>
+    var index = 0;
+    document.getElementById("addColor").onclick = (e) => {
+        index++;
+        const container = document.getElementById("productColors");
+        const productColor = document.createElement("div");
+        productColor.className = "productColor";
+        productColor.innerHTML = `
+                <div class="form-group">
+                    <label for="ProductColors_${index}__HexCode">Product Color</label>
+                    <div class="input-group my-colorpicker${index} colorpicker-element">
+                        <input type="text"
+                               name="ProductColors[${index}].HexCode"
+                               required
+                               id="ProductColors_${index}__HexCode"
+                               class="form-control"
+                               data-val="true"
+                               data-val-required="Please provide a valid Hex Code.">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-square" style="color: rgb(0, 0, 0);"></i></span>
+                        </div>
+                    </div>
+                    <span class="text-danger" data-valmsg-for="ProductColors[${index}].HexCode" data-valmsg-replace="true"></span>
+                </div>
+                <div id="imagesContainer${index}" class="d-flex justify-content-evenly flex-wrap"></div>
+                    <div class="d-flex flex-column gap-2 my-2">
+                    <div class="custom-file">
+                        <input type="file"
+                               name="ProductColors[${index}].Images"
+                               id="ProductColors_${index}__Images"
+                               class="custom-file-input"
+                               required
+                               accept=".jpg,.jpeg,.png,.gif"
+                               data-val="true"
+                                   multiple
+                               data-val-required="Please upload at least one image.">
+                        <label for="ProductColors_${index}__Images" class="custom-file-label">Choose Images</label>
+                    </div>
+                    <span class="text-danger" data-valmsg-for="ProductColors[${index}].Images" data-valmsg-replace="true"></span>
+                </div>
+            `;
+
+
+
+        container.appendChild(document.createElement("hr"));
+        container.appendChild(productColor);
+
+        // Reinitialize custom file input for dynamic fields
+        bsCustomFileInput.init();
+
+        // Reinitialize colorpicker for the new color field
+        $(`.my-colorpicker${index}`).colorpicker();
+
+        $(`.my-colorpicker${index}`).on('colorpickerChange', function (event) {
+            if (event.color) {
+                $(`.my-colorpicker${index} .fa-square`).css('color', event.color.toString());
+            }
+        });
+
+        RegisterFileInput(index);
+
+    };
+</script>

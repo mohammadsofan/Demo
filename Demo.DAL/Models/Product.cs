@@ -19,7 +19,7 @@ namespace Demo.DAL.Models
         public DateTime CreatedAt { get; set; }
         public Guid SubCategoryId { get; set; }
         public SubCategory SubCategory { get; set; } = null!;
-        public ICollection<Image> Images { get; set; } = null!;
+        public ICollection<ProductColor> ProductColors { get; set; } = null!;
         public ICollection<CartItem> CartItems { get; set; } = null!;
         public ICollection<OrderItem> OrderItems { get; set; } = null!;
 

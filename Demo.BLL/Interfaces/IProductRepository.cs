@@ -9,7 +9,7 @@ namespace Demo.BLL.Interfaces
 {
      public interface IProductRepository
     {
-        Task<IEnumerable<Product>?> GetByCategory(Guid? categoryId);
+        Task<IEnumerable<Product>> GetByCategory(Guid categoryId);
         Task<Product?> Get(Guid id);
         Task<int> Create(Product product);
         Task<int> Update(Product product);

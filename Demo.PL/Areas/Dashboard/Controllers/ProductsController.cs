@@ -18,14 +18,16 @@ namespace Demo.PL.Areas.Dashboard.Controllers
         private readonly IProductRepository productRepository;
         private readonly ISubCategoryRepository subCategoryRepository;
         private readonly ICategoryRepository categoryRepository;
+        private readonly IProductColorRepository productColorRepository;
         private readonly ProductService productService;
         private readonly IImageRepository imageRepository;
 
-        public ProductsController(IProductRepository productRepository, ISubCategoryRepository subCategoryRepository,ICategoryRepository categoryRepository,ProductService productService,IImageRepository imageRepository)
+        public ProductsController(IProductRepository productRepository, ISubCategoryRepository subCategoryRepository,ICategoryRepository categoryRepository,IProductColorRepository productColorRepository,IImageRepository imageRepository, ProductService productService)
         {
             this.productRepository = productRepository;
             this.subCategoryRepository = subCategoryRepository;
             this.categoryRepository = categoryRepository;
+            this.productColorRepository = productColorRepository;
             this.productService = productService;
             this.imageRepository = imageRepository;
         }
@@ -33,31 +35,20 @@ namespace Demo.PL.Areas.Dashboard.Controllers
         {
             try
             {
-                 var categories = await categoryRepository.GetAll();
-                if(categories == null || !categories.Any())
+                var categories = await categoryRepository.GetAll();
+                if(!categories.Any())
                 {
                     ViewBag.Categories = null;
-                    return View(null);
+                    return View();
                 }
-                 ViewBag.Categories = productService.GetCategories(categories);
-                 var products = await productRepository.GetByCategory(id);
-                // in case the user selected a category that has no products - get the category name where category's id equals to the request id
-                if (!products.Any() && id != null)
-                    ViewBag.CategoryName = productService.GetCategories(categories).Where(item => Guid.Parse(item.Value) == id).Select(item => item.Text).First();
-                else if(!products.Any() && id == null)
-                {
-                    ViewBag.CategoryName = productService.GetCategories(categories).Select(item => item.Text).First();
-                }
-                // in case the user enterd the index page without ant id- get the category name from the products
-                else
-                    ViewBag.CategoryName = products.First().SubCategory.Category.Name;
+                ViewBag.Categories = productService.GetCategories(categories);
+
+                var products = await productRepository.GetByCategory(id ?? categories.First().Id);
+                ViewBag.CategoryName = categories.FirstOrDefault(c => c.Id == (id ?? categories.First().Id))?.Name ?? "Unknown Category";
 
                 var productsVm = productService.MapToProductVM(products);
-               
-                
 
-                 return View(productsVm);
-              
+                return View(productsVm); 
             }
             catch (InvalidOperationException ex)
             {
@@ -80,21 +71,48 @@ namespace Demo.PL.Areas.Dashboard.Controllers
         {
             try
             {
-
-                if (ModelState.IsValid) {
-                    var product = productService.MapToProduct(model,true);
-                    foreach (var item in model.Images)
+                if (ModelState.IsValid)
+                {
+                    Product product = new Product()
                     {
-                        var imageName = await FileHelper.UploadImage(item, "images");
-                        var image=new Image()
+                        Id = Guid.NewGuid(),
+                        CreatedAt = DateTime.UtcNow,
+                        Name = model.Name,
+                        Description = model.Description,
+                        Quantity = model.Quantity,
+                        InPublish = model.InPublish,
+                        Discount = model.Discount,
+                        Price = model.Price,
+                        SubCategoryId = Guid.Parse(model.SelectedSubCategory),
+
+                    };
+                    await productRepository.Create(product);
+                    foreach(var pc in model.ProductColors)
+                    {
+                        pc.ProductId = product.Id;
+                        var productColor = new ProductColor()
                         {
                             Id = Guid.NewGuid(),
-                            Name = imageName,
-                            ProductId = product.Id
+                            HexCode = pc.HexCode,
+                            ProductId = product.Id,
+
                         };
-                        await imageRepository.Create(image);
+                        await productColorRepository.Create(productColor);
+                        
+                        foreach(var img in pc.Images)
+                        {
+                           
+                            var imageName = await FileHelper.UploadImage(img, "images");
+                            Image image = new Image()
+                            {
+                                 Id= Guid.NewGuid(),
+                                 Name = imageName,
+                                 ProductColorId=productColor.Id,
+                            };
+                            await imageRepository.Create(image);
+                        }
                     }
-                    await productRepository.Create(product);
+
                     return RedirectToAction(nameof(Index));
                 }
                 else
@@ -106,27 +124,12 @@ namespace Demo.PL.Areas.Dashboard.Controllers
                     };
                     return View(ProductVM);
                 }
-
             }
-            catch (ArgumentException ex)
+            catch(InvalidOperationException ex)
             {
-                foreach (var image in model.Images)
-                {
-                    FileHelper.DeleteImage("images", image.Name);
-                }
-                var subCategories = await subCategoryRepository.GetAllWithCategory();
-
-                model.SubCategories = productService.GetSubCategories(subCategories);
-               
-                ModelState.AddModelError("Images", ex.Message);
-                return View(model);
+                return BadRequest();
             }
 
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-          
         }
         public async Task<IActionResult> Delete(Guid? id)
         {
@@ -165,9 +168,12 @@ namespace Demo.PL.Areas.Dashboard.Controllers
                 {
                     return NotFound();
                 }
-                foreach(var image in product.Images)
+                foreach(var pc in product.ProductColors)
                 {
-                    FileHelper.DeleteImage("images", image.Name);
+                    foreach (var image in pc.Images)
+                    {
+                        FileHelper.DeleteImage("images", image.Name);
+                    }
                 }
                 await productRepository.Delete(product);
                 return RedirectToAction(nameof(Index));
@@ -189,37 +195,127 @@ namespace Demo.PL.Areas.Dashboard.Controllers
                 return NotFound();
             }
             var subCategories = await subCategoryRepository.GetAllWithCategory();
-            var ProductVM = new CreateProductViewModel()
+            var ProductVM = new EditProductViewModel()
             {
                 Id = product.Id,
                 Name = product.Name,
                 Description = product.Description,
-                Price= product.Price,
+                Price = product.Price,
                 Quantity = product.Quantity,
                 Discount = product.Discount,
                 InPublish = product.InPublish,
                 CreatedAt = product.CreatedAt,
-                SelectedSubCategory=product.SubCategoryId.ToString(),
-                SubCategories = productService.GetSubCategories(subCategories)
+                SelectedSubCategory = product.SubCategoryId.ToString(),
+                SubCategories = productService.GetSubCategories(subCategories),
+                ProductColors = product.ProductColors.Select(pc => new EditProductColorViewModel()
+                {
+                    Id=pc.Id,
+                    HexCode = pc.HexCode,
+                    ProductId = pc.ProductId,
+                    Images = pc.Images.Select(img => new ImageViewModel()
+                    {
+                        Id =img.Id,
+                        ProductColorId = pc.Id,
+                        Name=img.Name,
+                    }).ToList(),
+                }).ToList()
             
             };
             return View(ProductVM);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(CreateProductViewModel model)
+        public async Task<IActionResult> Edit(EditProductViewModel model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var product = productService.MapToProduct(model,false);
+                    var product = new Product()
+                    {
+                        Id = model.Id,
+                        Name = model.Name,
+                        Description = model.Description,
+                        Price = model.Price,
+                        Quantity = model.Quantity,
+                        Discount = model.Discount,
+                        InPublish = model.InPublish,
+                        SubCategoryId = Guid.Parse(model.SelectedSubCategory),
+                        CreatedAt = model.CreatedAt,
+                    };
+                    if (model.ImagesToDelete is not null)
+                    {
+                        var imagesToDelete = model.ImagesToDelete.Split(",");
+                        if (imagesToDelete.Length > 0)
+                        {
+                            foreach (var image in imagesToDelete)
+                            {
+                                var result = Guid.TryParse(image, out var imageId);
+                                if (result)
+                                {
+                                    var img = await imageRepository.Get(imageId);
+                                    if (img is not null)
+                                    {
+                                        FileHelper.DeleteImage("images", img.Name);
+                                        await imageRepository.Delete(img);
+
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+
+                    foreach (var pc in model.ProductColors)
+                    {
+                        var productColor = new ProductColor()
+                        {
+                            Id =pc.Id,
+                            HexCode = pc.HexCode,
+                            ProductId = product.Id,
+
+                        };
+                        await productColorRepository.Update(productColor);
+                        if (pc.NewImages is not null)
+                        {
+                            foreach (var img in pc.NewImages)
+                            {
+
+                                var imageName = await FileHelper.UploadImage(img, "images");
+                                Image image = new Image()
+                                {
+                                    Id = Guid.NewGuid(),
+                                    Name = imageName,
+                                    ProductColorId = productColor.Id,
+                                };
+                                await imageRepository.Create(image);
+                            }
+                        }
+                    }
                     await productRepository.Update(product);
+
+
                     return RedirectToAction(nameof(Index));
+
                 }
                 else
                 {
-                   
+                    var subCategories = await subCategoryRepository.GetAllWithCategory();
+                    model.SubCategories = productService.GetSubCategories(subCategories);
+                    var pc = await productColorRepository.GetByProductId(model.Id);
+                    model.ProductColors = pc.Select(pc => new EditProductColorViewModel()
+                    {
+                        Id = pc.Id,
+                        HexCode = pc.HexCode,
+                        ProductId = pc.ProductId,
+                        Images = pc.Images.Select(img => new ImageViewModel()
+                        {
+                            Id = img.Id,
+                            ProductColorId = pc.Id,
+                            Name = img.Name,
+                        }).ToList(),
+                    }).ToList();
+
                     return View(model);
                 }
 

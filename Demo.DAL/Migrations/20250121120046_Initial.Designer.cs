@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Demo.DAL.Data.Migrations
+namespace Demo.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250111114709_updateCategories")]
-    partial class updateCategories
+    [Migration("20250121120046_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -170,19 +170,54 @@ namespace Demo.DAL.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CraetedDate")
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<double>("Discount")
                         .HasColumnType("float");
 
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("Coupons");
+                });
+
+            modelBuilder.Entity("Demo.DAL.Models.Image", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("ProductColorId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Coupons");
+                    b.HasIndex("ProductColorId");
+
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("Demo.DAL.Models.Order", b =>
@@ -275,6 +310,26 @@ namespace Demo.DAL.Data.Migrations
                     b.HasIndex("SubCategoryId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Demo.DAL.Models.ProductColor", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("HexCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductColor");
                 });
 
             modelBuilder.Entity("Demo.DAL.Models.SubCategory", b =>
@@ -468,6 +523,17 @@ namespace Demo.DAL.Data.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("Demo.DAL.Models.Image", b =>
+                {
+                    b.HasOne("Demo.DAL.Models.ProductColor", "ProductColor")
+                        .WithMany("Images")
+                        .HasForeignKey("ProductColorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductColor");
+                });
+
             modelBuilder.Entity("Demo.DAL.Models.Order", b =>
                 {
                     b.HasOne("Demo.DAL.Models.Coupon", "Copon")
@@ -513,6 +579,17 @@ namespace Demo.DAL.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("SubCategory");
+                });
+
+            modelBuilder.Entity("Demo.DAL.Models.ProductColor", b =>
+                {
+                    b.HasOne("Demo.DAL.Models.Product", "Product")
+                        .WithMany("ProductColors")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Demo.DAL.Models.SubCategory", b =>
@@ -610,6 +687,13 @@ namespace Demo.DAL.Data.Migrations
                     b.Navigation("CartItems");
 
                     b.Navigation("OrderItems");
+
+                    b.Navigation("ProductColors");
+                });
+
+            modelBuilder.Entity("Demo.DAL.Models.ProductColor", b =>
+                {
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("Demo.DAL.Models.SubCategory", b =>

@@ -20,6 +20,19 @@ namespace Demo.BLL.Repositories
         {
             this.dbContext = dbContext;
         }
+        public async Task<DAL.Models.Image?> Get(Guid id)
+        {
+            try
+            {
+                var image = await dbContext.Images.FindAsync(id);
+                return image;
+
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("An error occurred while retrieving the image. Please try again later.", ex);
+            }
+        }
         public async Task<int> Create(DAL.Models.Image image)
         {
             try
@@ -34,7 +47,7 @@ namespace Demo.BLL.Repositories
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException("An error occurred while createing the category. Please try again later.", ex);
+                throw new InvalidOperationException("An error occurred while creating the image. Please try again later.", ex);
             }
 
 
@@ -50,7 +63,7 @@ namespace Demo.BLL.Repositories
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException("An error occurred while Deleting the category. Please try again later.", ex);
+                throw new InvalidOperationException("An error occurred while Deleting the image. Please try again later.", ex);
             }
         }
         public async Task<int> Update(DAL.Models.Image image)
@@ -63,7 +76,7 @@ namespace Demo.BLL.Repositories
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException("An error occurred while createing the category. Please try again later.", ex);
+                throw new InvalidOperationException("An error occurred while updating the image. Please try again later.", ex);
             }
         }
     }

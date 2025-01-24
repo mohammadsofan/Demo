@@ -33,12 +33,35 @@
     <input class="custom-control-input" type="checkbox" asp-for="InPublish">
     <label asp-for="InPublish" class="custom-control-label">InPublish</label>
 </div>
-<div id="imagesContainer" class="d-flex justify-content-evenly flex-wrap">
+<div class="card my-1">
+    <div class="card-header">
+        <span class="btn btn-primary" id="addColor">Add Color</span>
+    </div>
+    <div class="card-body" id="productColors">
+        <div class="productColor">
+            <div class="form-group">
+                <label asp-for="ProductColors[0].HexCode">Product Color</label>
 
-</div>
-<div class="input-group my-2">
-    <div class="custom-file">
-        <input asp-for="Images" class="custom-file-input" multiple>
-        <label asp-for="Images" class="custom-file-label" >Choose Images</label>
+                <div class="input-group my-colorpicker0 colorpicker-element" data-colorpicker-id="2">
+                    <input type="text" asp-for="ProductColors[0].HexCode"  required  class="form-control" data-original-title="" title="" fdprocessedid="ax2h67">
+
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fas fa-square" style="color: rgb(0, 0, 0);"></i></span>
+                    </div>
+                </div>
+                <span asp-validation-for="ProductColors[0].HexCode" class="text-danger"></span>
+
+            </div>
+
+            <div id="imagesContainer0" class="d-flex justify-content-evenly flex-wrap"></div>
+            <div class="d-flex flex-column gap-2 my-2">
+                <div class="custom-file">
+                    <input asp-for="ProductColors[0].Images" class="custom-file-input" accept=".jpg,.jpeg,.png,.gif" multiple>
+                    <label asp-for="ProductColors[0].Images" class="custom-file-label">Choose Images</label>
+                </div>
+                <span asp-validation-for="ProductColors[0].Images" class="text-danger"></span>
+
+            </div>
+        </div>
     </div>
 </div>

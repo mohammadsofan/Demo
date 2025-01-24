@@ -36,7 +36,7 @@
             }
 
             // Generate a unique file name
-            var imageName = Guid.NewGuid().ToString() + fileExtension;
+            var imageName = Guid.NewGuid().ToString()+file.FileName+ fileExtension;
             var filePath = Path.Combine(folderPath, imageName);
 
             // Save the file

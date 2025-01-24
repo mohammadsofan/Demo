@@ -55,7 +55,7 @@ namespace Demo.BLL.Repositories
         {
             try
             {
-                var result = await dbContext.Products.Include(p=>p.Images).FirstOrDefaultAsync(p => p.Id == id);
+                var result = await dbContext.Products.Include(p=>p.ProductColors).ThenInclude(pc=>pc.Images).FirstOrDefaultAsync(p => p.Id == id);
                 return result;
             }
             catch (Exception ex)
@@ -64,24 +64,11 @@ namespace Demo.BLL.Repositories
             }
         }
 
-        public async Task<IEnumerable<Product>?> GetByCategory(Guid? categoryId)
+        public async Task<IEnumerable<Product>> GetByCategory(Guid categoryId)
         {
             try
-            {
-                IEnumerable<Product> products;
-
-                if (categoryId is null)
-                {
-                    var category = await dbContext.Categories.FirstOrDefaultAsync();
-                    if (category == null)
-                    {
-                        return null;
-                    }
-                    products = await dbContext.Products.Include(p=>p.Images).Include(p => p.SubCategory).ThenInclude(sc => sc.Category).Where(p=>p.SubCategory.CategoryId == category.Id).ToListAsync();
-                    return products;
-
-                }
-                products = await dbContext.Products.Include(p => p.Images).Include(p => p.SubCategory).ThenInclude(sc => sc.Category).Where(s=>s.SubCategory.CategoryId == categoryId).ToListAsync();
+            {           
+                var products = await dbContext.Products.Include(p => p.SubCategory).ThenInclude(sc => sc.Category).Include(sc=>sc.ProductColors).ThenInclude(pc=>pc.Images).Where(s=>s.SubCategory.CategoryId == categoryId).ToListAsync();
                 return products;
             }
             catch (Exception ex)

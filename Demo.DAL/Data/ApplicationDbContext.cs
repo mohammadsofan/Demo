@@ -29,6 +29,7 @@ namespace Demo.DAL.Data
         public DbSet<Coupon> Coupons { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Image> Images { get; set; }
+        public DbSet<ProductColor> ProductColors { get; set; }
 
     }
 }

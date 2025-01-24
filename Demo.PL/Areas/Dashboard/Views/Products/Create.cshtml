@@ -19,10 +19,10 @@
                     </div>
                     <form asp-area="Dashboard" asp-controller="Products" asp-action="Create" enctype="multipart/form-data">
                         <div class="card-body">
-                            <partial name="_ProductForm"/>
+                            <partial name="_CreateProductForm"/>
                         </div>
                         <div class="card-footer">
-                            <div asp-validation-summary="All" class="text-danger"></div>
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <button type="submit" class="btn btn-primary">Create</button>
                         </div>
                     </form>
@@ -37,11 +37,25 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <partial name="_FileInputScripts" />
+    <partial name="_AddProductColorScripts" />
     <partial name="_LoadImagesScripts" />
+    <partial name="_ColorPickerScripts" />
+    <script>
+        $('.my-colorpicker0').colorpicker();
+
+        $('.my-colorpicker0').on('colorpickerChange', function (event) {
+            if (event.color) {
+                $('.my-colorpicker0 .fa-square').css('color', event.color.toString());
+            }
+        });
+        RegisterFileInput(0);
+    </script>
+
 
 }
 
 @section Styles{
+    <partial name="_ColorPickerStyles" />
     <style>
         .productImage {
             object-fit:cover;

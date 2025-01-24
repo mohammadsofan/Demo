@@ -20,6 +20,6 @@ namespace Demo.DAL.Models
         public Guid? CoponId { get; set; }
         public Coupon Copon { get; set; } = null!;
 
-        public ICollection<OrderItem> OrderItems { get; set; }
+        public ICollection<OrderItem> OrderItems { get; set; } = null!;
     }
 }   

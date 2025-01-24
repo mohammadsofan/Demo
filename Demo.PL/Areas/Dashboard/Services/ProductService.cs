@@ -40,7 +40,7 @@ namespace Demo.PL.Areas.Dashboard.Services
                 Discount = p.Discount,
                 SubCategoryName = p.SubCategory.Name,
                 CreatedAt = p.CreatedAt,
-                MainImage = p.Images.FirstOrDefault().Name,
+                MainImage = p.ProductColors.First().Images.First().Name,
 
             }).ToList();
         }

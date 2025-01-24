@@ -1,35 +1,93 @@
-﻿@model CreateProductViewModel
+﻿@model EditProductViewModel
 @{
     ViewData["Title"] = "Products - Edit";
     ViewData["HeaderTitle"] = "EditProduct";
     ViewData["Controller"] = "Products";
 
 }
-<div class="col-md-6">
+@if (Model.SubCategories != null && Model.SubCategories.Any())
+{
+    <div class="col-md-6">
 
-    <a asp-controller="Products" asp-action="Index" class="btn btn-secondary mb-2">
-        <i class="fa fa-sm fa-chevron-left"></i>
-        Back to list
-    </a>
-    <div class="card card-primary">
-        <div class="card-header">
-            <h3 class="card-title">Create Category</h3>
+        <a asp-controller="Products" asp-action="Index" class="btn btn-secondary mb-2">
+            <i class="fa fa-sm fa-chevron-left"></i>
+            Back to list
+        </a>
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Create Product</h3>
+            </div>
+            <form asp-area="Dashboard" asp-controller="Products" asp-action="Edit" enctype="multipart/form-data">
+                <div class="card-body">
+                    <partial name="_EditProductForm" />
+                </div>
+                <div class="card-footer">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <button type="submit" class="btn btn-primary" id="submitButtuon">Edit</button>
+                </div>
+            </form>
         </div>
-        <form asp-area="Dashboard" asp-controller="Products" asp-action="Edit">
-            <div class="card-body">
-                <input type="hidden" asp-for="Id" />
-                <input type="hidden" asp-for="CreatedAt" />
-                <partial name="_ProductForm" />
-            </div>
-            <div class="card-footer">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <button type="submit" class="btn btn-primary">Edit</button>
-            </div>
-        </form>
+
     </div>
 
-</div>
-
+}
+else
+{
+    <div class="alert alert-info"> There are no sub categories, Therefor, you can't add product</div>
+}
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <partial name="_FileInputScripts" />
+    <partial name="_LoadImagesScripts" />
+    <partial name="_ColorPickerScripts" />
+    <script>
+        for (let i = 0; i < @(Model.ProductColors.Count);i++){
+        $(`.my-colorpicker${i}`).colorpicker();
+
+            $(`.my-colorpicker${i}`).on('colorpickerChange', function (event) {
+            if (event.color) {
+            $(`.my-colorpicker${i} .fa-square`).css('color', event.color.toString());
+            }
+        });
+       RegisterFileInput(i,false);
+        }
+        const imagesToDelete = document.querySelectorAll("a.delete-image");
+        imagesToDelete.forEach((image) => {
+            image.onclick = (e) => {
+                var id = e.target.closest("a").dataset.id;
+                console.log(id);
+                var input = document.getElementById("ImagesToDelete");
+                input.value += id + ",";
+                console.log(input.value);
+                e.target.closest("div").remove();
+             };
+        });
+
+        var btn = document.getElementById("submitButtuon");
+        btn.addEventListener("click", (e) => {
+            for (let i = 0; i < @(Model.ProductColors.Count); i++) {
+                const imageInput = document.getElementById(`ProductColors_${i}__NewImages`);
+                const imageContainer = document.getElementById(`imagesContainer${i}`)
+                if (imageContainer.innerHTML.trim(" ").length==0 && imageInput.files.length == 0) {
+                    imageInput.setAttribute("required","");
+                }
+               
+            }
+        });
+    </script>
+
+
+}
+
+@section Styles {
+    <partial name="_ColorPickerStyles" />
+    <style>
+        .productImage {
+            object-fit: cover;
+            width: 80px;
+            height: 80px;
+            box-shadow: 0px 0px 1px;
+        }
+    </style>
+
 }
