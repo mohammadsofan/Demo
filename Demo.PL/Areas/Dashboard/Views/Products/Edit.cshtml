@@ -55,17 +55,16 @@ else
         imagesToDelete.forEach((image) => {
             image.onclick = (e) => {
                 var id = e.target.closest("a").dataset.id;
-                console.log(id);
                 var input = document.getElementById("ImagesToDelete");
                 input.value += id + ",";
-                console.log(input.value);
                 e.target.closest("div").remove();
              };
         });
 
         var btn = document.getElementById("submitButtuon");
         btn.addEventListener("click", (e) => {
-            for (let i = 0; i < @(Model.ProductColors.Count); i++) {
+            var len = document.querySelectorAll(".productColor").length;
+            for (let i = 0; i < len; i++) {
                 const imageInput = document.getElementById(`ProductColors_${i}__NewImages`);
                 const imageContainer = document.getElementById(`imagesContainer${i}`)
                 if (imageContainer.innerHTML.trim(" ").length==0 && imageInput.files.length == 0) {
@@ -81,13 +80,6 @@ else
 
 @section Styles {
     <partial name="_ColorPickerStyles" />
-    <style>
-        .productImage {
-            object-fit: cover;
-            width: 80px;
-            height: 80px;
-            box-shadow: 0px 0px 1px;
-        }
-    </style>
+
 
 }

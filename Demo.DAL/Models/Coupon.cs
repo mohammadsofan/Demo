@@ -18,6 +18,6 @@ namespace Demo.DAL.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
-        public ICollection<Order> Orders { get; set; } = null!;
+        public virtual ICollection<Order> Orders { get; set; } = null!;
     }
 }

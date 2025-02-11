@@ -1,0 +1,151 @@
+﻿@model IEnumerable<SlideViewModel>
+@{
+    ViewData["Title"] = "Slides";
+    ViewData["HeaderTitle"] = ViewData["Title"];
+    ViewData["Controller"] = ViewData["Title"];
+}
+
+<div class="col-12">
+
+
+    <h1 class="text-primary mb-3">Intro Slides</h1>
+    <div class="card p-2">
+        <div class="card-header">
+            <h3 class="card-title">Intro Slides</h3>
+        </div>
+        <div class="card-body table-responsive p-0">
+
+            <table class="table table-hover text-nowrap">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(slide => slide.Image)</th>
+                        <th>@Html.DisplayNameFor(slide => slide.Title)</th>
+                        <th>@Html.DisplayNameFor(slide => slide.SubTitle)</th>
+                        <th>@Html.DisplayNameFor(slide => slide.SubLeft)</th>
+                        <th>@Html.DisplayNameFor(slide => slide.Price)</th>
+                        <th>@Html.DisplayNameFor(slide => slide.SubRight)</th>
+                        <th>@Html.DisplayNameFor(slide => slide.ButtonText)</th>
+                        <th>@Html.DisplayNameFor(slide => slide.Link)</th>
+                        <th>@Html.DisplayNameFor(slide => slide.Order)</th>
+                        <th>@Html.DisplayNameFor(slide => slide.CreatedAt)</th>
+                        <th>@Html.DisplayNameFor(slide => slide.UpdatedAt)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <img src="~/files/images/@item.Image" class="img-circle object-fit-cover" width="60px" height="60px" />
+                            </td>
+                            <td>@item.Title</td>
+                            <td>@item.SubTitle</td>
+                            <td>@item.SubLeft</td>
+                            <td>@item.Price</td>
+                            <td>@item.SubRight</td>
+                            <td>@item.ButtonText</td>
+                            <td>@item.Link</td>
+                            <td>@item.Order</td>
+                            <td>@item.CreatedAt.ToLocalTime()</td>
+                            <td>@item.UpdatedAt.ToLocalTime()</td>
+                            <td class="actions">
+                                <a class="btn btn-info btn-sm" target="_blank" asp-controller="Slides" asp-action="Preview" asp-route-id="@item.Id">
+                                    <i class="fas fa-clipboard">
+                                    </i>
+                                    Preview
+                                </a>
+                                <a class="btn btn-primary btn-sm" asp-controller="Slides" asp-action="Edit" asp-route-id="@item.Id">
+                                    <i class="fas fa-edit">
+                                    </i>
+                                    Edit
+                                </a>
+                                <button class="btn btn-danger btn-sm deleteSlide" id="" data-id="@item.Id">
+                                    <i class="fas fa-trash">
+                                    </i>
+                                    Delete
+                                </button>
+                                    @Html.AntiForgeryToken()
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+
+</div>
+
+@section Styles {
+    <partial name="_DatatablesStyles" />
+}
+@section Scripts {
+
+    <partial name="_DatatablesScripts" />
+    <partial name="_SweetAlertScripts" />
+    <script>
+        var deleteButton = document.querySelectorAll(".deleteSlide");
+        if (deleteButton.length > 0) {
+            deleteButton.forEach((button) => {
+
+                button.addEventListener("click", async (event) => {
+                    event.preventDefault();
+                    var id = event.currentTarget.dataset.id;
+                    var result = await Swal.fire({
+                        titleText: 'Delete Slide',
+                        text: 'Are you sure you want to delete?',
+                        icon: 'question',
+                        confirmButtonText: 'Delete',
+                        confirmButtonColor: 'red',
+                        showDenyButton: true,
+                        denyButtonText: 'Cancel',
+                        denyButtonColor: 'gray',
+                    });
+                    event.target.closest(".actions").classList.toggle("d-none");
+                    if (result.isConfirmed) {
+                        var response = await fetch(`/Dashboard/Slides/Delete/${id}`, {
+                            method: "POST",
+                            headers: {
+                                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        var result = await response.json();
+                        if (result.success) {
+                            Swal.fire({
+                                titleText: "Deleted successfully!",
+                                icon: "success",
+                                toast: true,
+                                showConfirmButton: false,
+                                position: "top-end",
+                                timer: 3000,
+                                timerProgressBar: true
+                            });
+                            event.target.closest("tr").remove();
+                        } else {
+                            Swal.fire({
+                                titleText: result.message,
+                                icon: "error",
+                                toast: true,
+                                showConfirmButton: false,
+                                position: "top-end",
+                                timer: 3000,
+                                timerProgressBar: true
+                            });
+                            event.target.closest(".actions").classList.toggle("d-none");
+
+                        }
+                    } else {
+                        event.target.closest(".actions").classList.toggle("d-none");
+                    }
+                });
+
+            })
+        }
+    </script>
+
+
+}
+

@@ -17,6 +17,7 @@
                 <table class="table table-hover text-nowrap">
                     <thead>
                         <tr>
+                            <th>@Html.DisplayNameFor(c => c.Image)</th>
                             <th>@Html.DisplayNameFor(c => c.Name)</th>
                             <th>@Html.DisplayNameFor(c => c.Description)</th>
                             <th>@Html.DisplayNameFor(c => c.CreatedAt)</th>
@@ -27,6 +28,9 @@
                         @foreach (var item in Model)
                         {
                             <tr>
+                                <td>
+                                <img src="~/files/images/@item.Image" class="img-circle object-fit-cover" width="60px" height="60px" />
+                                </td>
                                 <td>@item.Name</td>
                                 <td>@(item.Description.Length > 50 ? item.Description.Substring(0, 50) + "..." : item.Description)</td>
                                 <td>@item.CreatedAt.ToLocalTime()</td>
@@ -62,7 +66,5 @@
     <partial name="_DatatablesStyles" />
 }
 @section Scripts {
-
     <partial name="_DatatablesScripts" />
-
 }

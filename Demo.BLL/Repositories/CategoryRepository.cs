@@ -64,6 +64,30 @@ namespace Demo.BLL.Repositories
                 throw new InvalidOperationException("An error occurred while retrieving the categories. Please try again later.", ex);
             }
         }
+        public async Task<IEnumerable<Category>> GetPopular()
+        {
+            try
+            {
+                return await dbContext.Categories.Select(c => new
+                {
+                    category = c,
+                    orderCount = c.SubCategories
+                    .SelectMany(sc => sc.Products)
+                    .SelectMany(p => p.OrderItems)
+                    .Count()
+                })
+                .OrderByDescending(obj => obj.orderCount)
+                .Take(6)
+                .Select(obj => obj.category)
+                .ToListAsync();
+ 
+                    
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("An error occurred while retrieving the categories. Please try again later.", ex);
+            }
+        }
         public async Task<Category?> Get(Guid id)
         {
             try
@@ -99,7 +123,7 @@ namespace Demo.BLL.Repositories
         {
             try
             {
-                var category = await dbContext.Categories.Include(c=>c.SubCategories).FirstAsync(c=>c.Id==id);
+                var category = await dbContext.Categories.FirstAsync(c=>c.Id==id);
                 return category;
             }
             catch (Exception ex)

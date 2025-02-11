@@ -18,10 +18,10 @@ namespace Demo.DAL.Models
         public bool InPublish { get; set; }
         public DateTime CreatedAt { get; set; }
         public Guid SubCategoryId { get; set; }
-        public SubCategory SubCategory { get; set; } = null!;
-        public ICollection<ProductColor> ProductColors { get; set; } = null!;
-        public ICollection<CartItem> CartItems { get; set; } = null!;
-        public ICollection<OrderItem> OrderItems { get; set; } = null!;
+        public virtual SubCategory SubCategory { get; set; } = null!;
+        public virtual ICollection<ProductColor> ProductColors { get; set; } = null!;
+        public virtual ICollection<CartItem> CartItems { get; set; } = null!;
+        public virtual ICollection<OrderItem> OrderItems { get; set; } = null!;
 
     }
 }

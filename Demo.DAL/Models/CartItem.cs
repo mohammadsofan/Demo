@@ -11,7 +11,7 @@ namespace Demo.DAL.Models
         public Guid CartId { get; set; }
         public Guid ProductId { get; set; }
         public int Quantity { get; set; }
-        public Product Product { get; set; } = null!;
-        public Cart Cart { get; set; } = null!;
+        public virtual Product Product { get; set; } = null!;
+        public virtual Cart Cart { get; set; } = null!;
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Demo.DAL.Enums;
 using Demo.DAL.Models;
-using Demo.PL.Areas.Dashboard.ViewModels;
+using Demo.PL.Areas.Dashboard.ViewModels.Product;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.Rendering;
 

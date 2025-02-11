@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Demo.BLL.Interfaces;
 using Demo.DAL.Models;
-using Demo.PL.Areas.Dashboard.ViewModels;
+using Demo.PL.Areas.Dashboard.ViewModels.Category;
+using Demo.PL.Areas.Dashboard.ViewModels.SubCategory;
+using Demo.PL.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -48,7 +50,7 @@ namespace Demo.PL.Areas.Dashboard.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CategoryViewModel model)
+        public async Task<IActionResult> Create(CreateCategoryViewModel model)
         {
             try
             {
@@ -57,7 +59,7 @@ namespace Demo.PL.Areas.Dashboard.Controllers
                     var category = mapper.Map<Category>(model);
                     category.Id = Guid.NewGuid();
                     category.CreatedAt = DateTime.UtcNow;
-
+                    category.Image = await FileHelper.UploadImage(model.Image, "images");
                     var result = await categoryRepository.Create(category);
                     if (result == 1)
                     {
@@ -92,17 +94,22 @@ namespace Demo.PL.Areas.Dashboard.Controllers
             {
                 return NotFound();
             }
-            var categoryVM = mapper.Map<CategoryViewModel>(category);
+            var categoryVM = mapper.Map<EditCategoryViewModel>(category);
             return View(categoryVM);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(CategoryViewModel model)
+        public async Task<IActionResult> Edit(EditCategoryViewModel model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    if(model.NewImage is not null)
+                    {
+                        FileHelper.DeleteImage("images", model.Image ?? "");
+                        model.Image = await FileHelper.UploadImage(model.NewImage, "images");
+                    }
                     var Category = mapper.Map<Category>(model);
                     var result = await categoryRepository.Update(Category);
                     if (result == 1)
@@ -166,6 +173,7 @@ namespace Demo.PL.Areas.Dashboard.Controllers
                 {
                     return NotFound();
                 }
+                 FileHelper.DeleteImage("images", category.Image);
                 await categoryRepository.Delete(category);
                 return RedirectToAction(nameof(Index));
             }
@@ -195,12 +203,14 @@ namespace Demo.PL.Areas.Dashboard.Controllers
                     Name = category.Name,
                     Description = category.Description,
                     CreatedAt = category.CreatedAt,
+                    Image=category.Image,
                     SubCategories = category.SubCategories.Select(sc => new SubCategoryViewModel()
                     {
                         CategoryId = id.Value,
                         Id = sc.Id,
                         Name = sc.Name,
                         Description = sc.Description,
+                        Image= sc.Image,
                         CreatedAt = sc.CreatedAt
                     }).ToList(),
                 };
@@ -223,7 +233,7 @@ namespace Demo.PL.Areas.Dashboard.Controllers
             {
                 return NotFound();
             }
-            var model = new SubCategoryViewModel()
+            var model = new CreateSubCategoryViewModel()
             {
                 CategoryId = id.Value,
             };
@@ -232,7 +242,7 @@ namespace Demo.PL.Areas.Dashboard.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateSubCategory(SubCategoryViewModel model)
+        public async Task<IActionResult> CreateSubCategory(CreateSubCategoryViewModel model)
         {
             try
             {
@@ -241,6 +251,7 @@ namespace Demo.PL.Areas.Dashboard.Controllers
                     var subCategory = mapper.Map<SubCategory>(model);
                     subCategory.CreatedAt = DateTime.UtcNow;
                     subCategory.Id = Guid.NewGuid();
+                    subCategory.Image = await FileHelper.UploadImage(model.Image, "images");
                     var result = await subCategoryRepository.Create(subCategory);
                     if (result == 1)
                     {
@@ -249,7 +260,7 @@ namespace Demo.PL.Areas.Dashboard.Controllers
                     else
                     {
                         var category = await categoryRepository.Get(model.CategoryId);
-                        ViewBag.CategoryName = category.Name;
+                        ViewBag.CategoryName = category?.Name??"UnKnown Category";
                         ModelState.AddModelError("Name", "this name already exists.");
                         return View(model);
                     }
@@ -303,6 +314,7 @@ namespace Demo.PL.Areas.Dashboard.Controllers
                 {
                     return NotFound();
                 }
+                FileHelper.DeleteImage("images", subCategory.Image);
                 await subCategoryRepository.Delete(subCategory);
                 return RedirectToAction(nameof(Details), new { id = subCategory.CategoryId });
             }
@@ -325,7 +337,7 @@ namespace Demo.PL.Areas.Dashboard.Controllers
                 {
                     return NotFound();
                 }
-                var subCategoryVM = mapper.Map<SubCategoryViewModel>(subCategory);
+                var subCategoryVM = mapper.Map<EditSubCategoryViewModel>(subCategory);
                 ViewBag.categoryName = categoryName;
                 return View(subCategoryVM);
             }
@@ -336,12 +348,18 @@ namespace Demo.PL.Areas.Dashboard.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditSubCategory(SubCategoryViewModel model)
+        public async Task<IActionResult> EditSubCategory(EditSubCategoryViewModel model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    if (model.NewImage is not null)
+                    {
+                        FileHelper.DeleteImage("images", model.Image ?? "");
+                        var newImage = await FileHelper.UploadImage(model.NewImage, "images");
+                        model.Image = newImage;
+                    }
                     var subCategory = mapper.Map<SubCategory>(model);
                     var result = await subCategoryRepository.Update(subCategory);
                     if (result == 1)
@@ -351,7 +369,7 @@ namespace Demo.PL.Areas.Dashboard.Controllers
                     else
                     {
                         var category = await categoryRepository.Get(model.CategoryId);
-                        ViewBag.categoryName = category.Name;
+                        ViewBag.categoryName = category?.Name;
 
                         ModelState.AddModelError("Name", "this name already exists.");
                         return View(model);

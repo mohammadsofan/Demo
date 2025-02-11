@@ -23,7 +23,7 @@ namespace Demo.BLL.Repositories
             try
             {
 
-               var result= await dbContext.ProductColors.Include(pc=>pc.Images).Where(pc=>pc.ProductId == id).ToListAsync();
+               var result= await dbContext.ProductColors.Where(pc=>pc.ProductId == id).ToListAsync();
                return result;
 
             }catch(Exception ex)

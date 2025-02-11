@@ -16,6 +16,10 @@
                 <h3 class="card-title">Category Details</h3>
         </div>
         <div class="card-body">
+            <div class="row gap-2">
+                <span class="col-12 text-bold">@Html.DisplayNameFor(c => c.Image)</span>
+                <img class="col-6 col-lg-4 border rounded" src="~/files/images/@Model.Image" alt="@Model.Name"/>
+            </div>
             <div>
                 <span class="text-bold">@Html.DisplayNameFor(c=>c.Name)</span>
                 <h4>@Model.Name</h4>
@@ -43,6 +47,7 @@
                 <table class="table table-hover text-nowrap">
                 <thead>
                     <tr>
+                        <th>Image</th>
                         <th>Name</th>
                         <th>Description</th>
                         <th>CreatedAt</th>
@@ -54,6 +59,9 @@
                     @foreach (var item in Model.SubCategories)
                     {
                         <tr>
+                            <td>
+                                <img src="~/files/images/@item.Image" class="img-circle object-fit-cover" width="60px" height="60px" />
+                            </td>
                             <td>@item.Name</td>
                             <td>@item.Description</td>
                             <td>@item.CreatedAt.ToLocalTime()</td>

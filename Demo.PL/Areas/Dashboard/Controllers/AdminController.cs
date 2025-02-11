@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Demo.BLL.Interfaces;
 using Demo.BLL.Repositories;
-using Demo.PL.Areas.Dashboard.ViewModels;
+using Demo.PL.Areas.Dashboard.ViewModels.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -98,6 +98,7 @@ namespace Demo.PL.Areas.Dashboard.Controllers
         {
             try
             {
+                if(model.Id is not null)
                 await accountRepository.DeleteRole(model.Id);
                 return RedirectToAction(nameof(Roles));   
             }
@@ -117,15 +118,16 @@ namespace Demo.PL.Areas.Dashboard.Controllers
                     usersVM.Add(new UserViewModel()
                     {
                         Id = user.Id,
-                        UserName = user.UserName,
-                        Email = user.Email,
-                        PhoneNumber = user.PhoneNumber,
+                        UserName = user.UserName??"",
+                        Email = user.Email ?? "",
+                        PhoneNumber = user.PhoneNumber ?? "",
                         Address = user.Address,
                         CreatedAt = user.CreatedAt,
                         RolesList = await accountRepository.GetUserRoles(user)
 
                     });
                 }
+
 
                 return View(usersVM);
             }
@@ -186,7 +188,7 @@ namespace Demo.PL.Areas.Dashboard.Controllers
                         ModelState.AddModelError(string.Empty, "role not found.");
                         return View(model);
                     }
-                    var result = await accountRepository.AssignUserRole(user, role.Name);
+                    var result = await accountRepository.AssignUserRole(user, role.Name ?? "User");
                     if (!result.Succeeded)
                     {
                         ModelState.AddModelError(string.Empty, "fail to edit user role .");

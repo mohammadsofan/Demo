@@ -1,0 +1,148 @@
+﻿@model IEnumerable<CardViewModel>
+@{
+    ViewData["Title"] = "Cards - Show All";
+    ViewData["HeaderTitle"] = "Cards";
+    ViewData["Controller"] = "Cards";
+}
+
+<div class="col-12">
+        <h1 class="text-primary mb-3">Cards</h1>
+        <div class="card p-2">
+            <div class="card-header">
+                <h3 class="card-title">Products - @ViewBag.CategoryName</h3>
+            </div>
+            <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(c => c.Image)</th>
+                            <th>@Html.DisplayNameFor(c => c.Type)</th>
+                            <th>@Html.DisplayNameFor(c=>c.SubTitle)</th>
+                            <th>@Html.DisplayNameFor(c => c.Title)</th>
+                            <th>@Html.DisplayNameFor(c => c.SubLeft)</th>
+                            <th>@Html.DisplayNameFor(c => c.Price)</th>
+                            <th>@Html.DisplayNameFor(c => c.SubRight)</th>
+                            <th>@Html.DisplayNameFor(c => c.ButtonText)</th>
+                            <th>@Html.DisplayNameFor(c => c.Link)</th>
+                            <th>@Html.DisplayNameFor(c => c.Order)</th>
+                            <th>@Html.DisplayNameFor(c => c.CreatedAt)</th>
+                            <th>@Html.DisplayNameFor(c => c.UpdatedAt)</th>
+                        <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="~/files/images/@item.Image" class="img-circle object-fit-cover" width="60px" height="60px" />
+                                </td>
+                                <td>@item.Type</td>
+                                <td>@item.SubTitle</td>
+                                <td>@item.Title</td>
+                                <td>@item.SubLeft</td>
+                                <td>@item.Price</td>
+                                <td>@item.SubRight</td>
+                                <td>@item.ButtonText</td>
+                                <td>@item.Link</td>
+                                <td>@item.Order</td>
+                                <td>@item.CreatedAt.ToLocalTime()</td>
+                                <td>@item.UpdatedAt.ToLocalTime()</td>
+                                <td class="actions">
+                                        <a class="btn btn-info btn-sm" asp-controller="Cards" asp-action="Details" asp-route-id="@item.Id">
+                                            <i class="fas fa-clipboard">
+                                            </i>
+                                            Details
+                                        </a>
+                                        <a class="btn btn-primary btn-sm" asp-controller="Cards" asp-action="Edit" asp-route-id="@item.Id">
+                                                <i class="fas fa-edit">
+                                                </i>
+                                                Edit
+                                            </a>
+                                        <button class="btn btn-danger deleteCard btn-sm" data-id="@item.Id">
+                                            <i class="fas fa-trash">
+                                            </i>
+                                            Delete
+                                        </button>
+                                        @Html.AntiForgeryToken()
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                <a asp-controller="Cards" asp-action="Preview" class="btn btn-secondary" target="_blank">Preview All</a>
+            </div>
+        </div>
+
+</div>
+
+@section Styles {
+    <partial name="_DatatablesStyles" />
+}
+@section Scripts {
+
+    <partial name="_DatatablesScripts" />
+    <partial name="_SweetAlertScripts" />
+    <script>
+        var deleteButton = document.querySelectorAll(".deleteCard");
+        if (deleteButton.length > 0) {
+            deleteButton.forEach((button) => {
+                button.addEventListener("click", async (event) => {
+                    event.preventDefault();
+                    var id = event.currentTarget.dataset.id;
+                    var result = await Swal.fire({
+                        titleText: 'Delete Slide',
+                        text: 'Are you sure you want to delete?',
+                        icon: 'question',
+                        confirmButtonText: 'Delete',
+                        confirmButtonColor: 'red',
+                        showDenyButton: true,
+                        denyButtonText: 'Cancel',
+                        denyButtonColor: 'gray',
+                    });
+                    event.target.closest(".actions").classList.toggle("d-none");
+                    if (result.isConfirmed) {
+                        var response = await fetch(`/Dashboard/Cards/Delete/${id}`, {
+                            method: "POST",
+                            headers: {
+                                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        var result = await response.json();
+                        if (result.success) {
+                            Swal.fire({
+                                titleText: "Deleted successfully!",
+                                icon: "success",
+                                toast: true,
+                                showConfirmButton: false,
+                                position: "top-end",
+                                timer: 3000,
+                                timerProgressBar: true
+                            });
+                            event.target.closest("tr").remove();
+                        } else {
+                            Swal.fire({
+                                titleText: result.message,
+                                icon: "error",
+                                toast: true,
+                                showConfirmButton: false,
+                                position: "top-end",
+                                timer: 3000,
+                                timerProgressBar: true
+                            });
+                            event.target.closest(".actions").classList.toggle("d-none");
+
+                        }
+                    } else {
+                        event.target.closest(".actions").classList.toggle("d-none");
+                    }
+                });
+
+            })
+        }
+    </script>
+
+}

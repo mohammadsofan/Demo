@@ -1,0 +1,167 @@
+﻿@using Demo.DAL.Enums
+@model EditCardViewModel
+@{
+    ViewData["Title"] = "Cards - edit";
+    ViewData["HeaderTitle"] = "EditCard";
+    ViewData["Controller"] = "Cards";
+}
+
+<div class="col-md-6">
+
+    <a asp-controller="Cards" asp-action="Index" class="btn btn-secondary mb-2">
+        <i class="fa fa-sm fa-chevron-left"></i>
+        Back to list
+    </a>
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Edit Card</h3>
+        </div>
+        <form asp-area="Dashboard" asp-controller="Cards" asp-action="Edit" enctype="multipart/form-data">
+            <div class="card-body">
+                <input type="hidden" asp-for="Id"/>
+                <input type="hidden" asp-for="CreatedAt"/>
+                <input type="hidden" asp-for="Image" />
+                <input type="hidden" asp-for="Type" />
+
+                <div class="form-group">
+                    <label asp-for="Title"></label>
+                    <input asp-for="Title" class="form-control" placeholder="Title..">
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SubTitle"></label>
+                    <input asp-for="SubTitle" class="form-control" placeholder="SubTitle..">
+                    <span asp-validation-for="SubTitle" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SubLeft"></label>
+                    <input asp-for="SubLeft" class="form-control" placeholder="SubLeft..">
+                    <span asp-validation-for="SubLeft" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Price"></label>
+                    <input asp-for="Price" class="form-control" placeholder="Price..">
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SubRight"></label>
+                    <input asp-for="SubRight" class="form-control" placeholder="SubRight..">
+                    <span asp-validation-for="SubRight" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ButtonText"></label>
+                    <input asp-for="ButtonText" class="form-control" placeholder="Button Text..">
+                    <span asp-validation-for="ButtonText" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Link"></label>
+                    <input asp-for="Link" class="form-control" placeholder="Link..">
+                    <span asp-validation-for="Link" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Order"></label>
+                    <select asp-for="Order" class="form-control">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        @if (Model.Type == CardType.SectionA)
+                        {
+                            <option value="3">3</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Order" class="text-danger"></span>
+                </div>
+                <div class="categoryImage">
+                    <div class="form-group">
+                        <div id="imageContainer" class="d-flex justify-content-evenly flex-wrap">
+                            <img src="~/files/images/@Model.Image" class="formImage rounded m-2" alt="@Model.Image" />
+                        </div>
+                        <div class="d-flex flex-column gap-2 my-2">
+                            <div class="custom-file">
+                                <input asp-for="NewImage" class="custom-file-input" accept=".jpg,.jpeg,.png,.gif">
+                                <label asp-for="NewImage" class="custom-file-label">Choose Images</label>
+                            </div>
+                            <span asp-validation-for="NewImage" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <button type="submit" class="btn btn-primary">Edit</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_FileInputScripts" />
+    <script>
+        const imageInput = document.getElementById("NewImage");
+        const imagePreview = document.getElementById(`imageContainer`);
+        imageInput.addEventListener("change", (event) => {
+            const files = event.target.files;
+
+            // Clear previous previews
+            imagePreview.innerHTML = "";
+
+
+            Array.from(files).forEach((file) => {
+                if (!file.type.startsWith("image/")) {
+                    alert(`${file.name} is not an image file!`);
+                    imagePreview.innerHTML = `
+                        <img src="/files/images/@Model.Image" class="formImage rounded m-2" alt="@Model.Image" />
+                    `;
+                    event.target.value = "";
+                    return;
+                }
+
+                // Validate file size (example: max 2MB)
+                const maxSizeInMB = 5;
+                if (file.size > maxSizeInMB * 1024 * 1024) {
+                    alert(`${file.name} exceeds the ${maxSizeInMB}MB size limit.`);
+                    imagePreview.innerHTML = `
+                        <img src="/files/images/@Model.Image" class="formImage rounded m-2" alt="@Model.Image" />
+                    `;
+                    event.target.value = "";
+                    return;
+                }
+
+                // Create an image preview
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.createElement("img");
+                    img.className = "formImage m-2 rounded";
+                    img.src = e.target.result;
+                    img.alt = file.name;
+                    imagePreview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        var type = document.getElementById("Type");
+        var order = document.getElementById("Order");
+        type.addEventListener("change", () => {
+            if (type.value == "SectionA") {
+                order.innerHTML = `
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                       `;
+            }
+            else {
+                order.innerHTML = `
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        `;
+            }
+
+        });
+
+
+    </script>
+}
+

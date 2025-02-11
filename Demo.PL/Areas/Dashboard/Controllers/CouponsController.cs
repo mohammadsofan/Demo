@@ -4,7 +4,7 @@ using Demo.BLL.Repositories;
 using Demo.DAL.Enums;
 using Demo.DAL.Models;
 using Demo.PL.Areas.Dashboard.Services;
-using Demo.PL.Areas.Dashboard.ViewModels;
+using Demo.PL.Areas.Dashboard.ViewModels.Coupon;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;

@@ -5,6 +5,7 @@ using Demo.DAL.Models;
 using Demo.PL.Areas.Dashboard.Services;
 using Demo.PL.Mapping;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -21,6 +22,7 @@ namespace Demo.PL
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                options.UseLazyLoadingProxies();
             });
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
@@ -35,9 +37,12 @@ namespace Demo.PL
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IProductColorRepository, ProductColorRepository>();
             builder.Services.AddScoped<IImageRepository, ImageRepository>();
+            builder.Services.AddScoped<ISlideRepository, SlideRepository>();
+            builder.Services.AddScoped<ICardRepository, CardRepository>();
             builder.Services.AddScoped<CouponService>(); 
             builder.Services.AddScoped<ProductService>(); 
             builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(MappingProfile)));
+            builder.Services.AddSession();
             var app = builder.Build();
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -49,10 +54,11 @@ namespace Demo.PL
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseSession();
+
             app.MapControllerRoute(
                   name: "areas",
                   pattern: "{area:exists}/{controller=Admin}/{action=CreateRole}/{id?}"

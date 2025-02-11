@@ -30,6 +30,8 @@ namespace Demo.DAL.Data
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<ProductColor> ProductColors { get; set; }
+        public DbSet<Slide> Slides { get; set; }
+        public DbSet<Card> Cards { get; set; }
 
     }
 }

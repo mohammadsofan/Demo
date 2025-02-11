@@ -55,7 +55,7 @@ namespace Demo.BLL.Repositories
         {
             try
             {
-                var result = await dbContext.Products.Include(p=>p.ProductColors).ThenInclude(pc=>pc.Images).FirstOrDefaultAsync(p => p.Id == id);
+                var result = await dbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
                 return result;
             }
             catch (Exception ex)
@@ -68,7 +68,7 @@ namespace Demo.BLL.Repositories
         {
             try
             {           
-                var products = await dbContext.Products.Include(p => p.SubCategory).ThenInclude(sc => sc.Category).Include(sc=>sc.ProductColors).ThenInclude(pc=>pc.Images).Where(s=>s.SubCategory.CategoryId == categoryId).ToListAsync();
+                var products = await dbContext.Products.Include(p => p.SubCategory).ThenInclude(sc => sc.Category).Where(s=>s.SubCategory.CategoryId == categoryId).AsNoTracking().ToListAsync();
                 return products;
             }
             catch (Exception ex)

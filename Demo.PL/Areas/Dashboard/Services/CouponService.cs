@@ -1,6 +1,6 @@
 ﻿using Demo.DAL.Enums;
 using Demo.DAL.Models;
-using Demo.PL.Areas.Dashboard.ViewModels;
+using Demo.PL.Areas.Dashboard.ViewModels.Coupon;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 

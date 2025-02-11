@@ -1,0 +1,59 @@
+﻿@using Demo.DAL.Models
+@model IEnumerable<Category>
+<div class="dropdown category-dropdown show is-on" data-visible="true">
+    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-display="static" title="Browse Categories">
+        Browse Categories
+    </a>
+
+    <div class="dropdown-menu show">
+        <nav class="side-nav">
+            <ul class="menu-vertical sf-arrows">
+
+                @foreach (var cateogry in Model)
+                {
+                    @if (cateogry.SubCategories.Any())
+                    {
+
+                    <li class="megamenu-container">
+                        <a class="sf-with-ul" href="#">@cateogry.Name</a>
+                        <div class="megamenu">
+                            <div class="row no-gutters">
+                                <div class="col-md-6">
+                                    <div class="menu-col">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="menu-title">@cateogry.Name</div><!-- End .menu-title -->
+                                                <ul>
+                                                    @foreach (var subCateogry in cateogry.SubCategories)
+                                                    {
+                                                        <li><a href="#">@subCateogry.Name</a></li>
+
+                                                    }
+                                                </ul>
+                                            </div><!-- End .col-md-6 -->
+                                        </div><!-- End .row -->
+                                    </div><!-- End .menu-col -->
+                                </div><!-- End .col-md-8 -->
+
+                                <div class="col-md-6">
+                                    <div class="banner banner-overlay">
+                                        <a href="#" class="banner banner-menu">
+                                                <img src="~/files/images/@cateogry.Image" alt="@cateogry.Image">
+                                        </a>
+                                    </div><!-- End .banner banner-overlay -->
+                                </div><!-- End .col-md-4 -->
+                            </div><!-- End .row -->
+                        </div><!-- End .megamenu -->
+                        </li>
+                    }
+                    else
+                    {
+                        <li><a href="#">@cateogry.Name</a></li>
+
+                    }
+                }
+
+            </ul><!-- End .menu-vertical -->
+        </nav><!-- End .side-nav -->
+    </div><!-- End .dropdown-menu -->
+</div><!-- End .category-dropdown -->

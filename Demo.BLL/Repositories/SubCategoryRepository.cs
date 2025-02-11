@@ -67,7 +67,7 @@ namespace Demo.BLL.Repositories
         {
             try
             {
-                return await dbContext.SubCategories.AsNoTracking().Include(sc=>sc.Category).ToListAsync();
+                return await dbContext.SubCategories.AsNoTracking().ToListAsync();
             }
             catch (Exception ex)
             {

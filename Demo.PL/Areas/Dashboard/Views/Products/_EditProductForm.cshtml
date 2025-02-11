@@ -44,9 +44,9 @@
         {
             <div class="productColor">
                 <div class="form-group">
-                    <label asp-for="ProductColors[index].HexCode">Product Color</label>
                     <input type="hidden" asp-for="ProductColors[index].Id">
-                    <input type="hidden" asp-for="ProductColors[index].ProductId"/>
+                    <input type="hidden" asp-for="ProductColors[index].ProductId" />
+                    <label asp-for="ProductColors[index].HexCode">Product Color</label>
                     <div class="input-group my-colorpicker@(index) colorpicker-element" data-colorpicker-id="2">
                         <input type="text" asp-for="ProductColors[index].HexCode" class="form-control" data-original-title="" title="" fdprocessedid="ax2h67">
                         <div class="input-group-append">
@@ -60,7 +60,7 @@
                     @foreach (var image in pc.Images)
                     {
                         <div class="img">
-                            <img class="productImage m-2 rounded" src="~/files/images/@(image.Name)" />
+                            <img class="formImage m-2 rounded" src="~/files/images/@(image.Name)" />
                             <a href="javascript:void(0)" data-id="@image.Id" class="delete-image border rounded p-1"><i class="fas fa-times fa-lg text-danger"></i></a>
                         </div>
                     }
@@ -78,10 +78,12 @@
                 </div>
 
         </div>
+        <hr />
                 index++;
         }
         }
     </div>
+
 </div>
 <input type="hidden" asp-for="ImagesToDelete" value="">
 

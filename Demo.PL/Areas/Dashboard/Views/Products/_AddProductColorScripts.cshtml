@@ -1,7 +1,6 @@
 ﻿<script>
-    var index = 0;
+    var index = document.querySelectorAll(".productColor").length;
     document.getElementById("addColor").onclick = (e) => {
-        index++;
         const container = document.getElementById("productColors");
         const productColor = document.createElement("div");
         productColor.className = "productColor";
@@ -58,6 +57,7 @@
         });
 
         RegisterFileInput(index);
+        index++;
 
     };
 </script>

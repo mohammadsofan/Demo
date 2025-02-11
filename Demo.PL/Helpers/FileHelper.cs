@@ -36,7 +36,7 @@
             }
 
             // Generate a unique file name
-            var imageName = Guid.NewGuid().ToString()+file.FileName+ fileExtension;
+            var imageName = Guid.NewGuid().ToString()+file.FileName;
             var filePath = Path.Combine(folderPath, imageName);
 
             // Save the file
@@ -50,14 +50,30 @@
 
         public static  bool DeleteImage(string folderName,string fileName)
         {
-            var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/files", folderName,fileName);
-            if (File.Exists(fullPath))
+            if (fileName is not null)
             {
-                File.Delete(fullPath);
-                return true;
+                var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/files", folderName, fileName);
+                if (File.Exists(fullPath))
+                {
+                    File.Delete(fullPath);
+                    return true;
+                }
             }
             return false;
+            
 
+        }
+        public static async Task<string> ConvertFileToBase64Async(IFormFile file)
+        {
+            if (file is null) return string.Empty;
+            using (var memoryStream = new MemoryStream())
+            {
+                // Copy the file into the memory stream
+                await file.CopyToAsync(memoryStream);
+                byte[] imageBytes = memoryStream.ToArray();
+                // Convert to Base64 string
+                return $"data:{file.ContentType};base64,{Convert.ToBase64String(imageBytes)}";
+            }
         }
     }
 }

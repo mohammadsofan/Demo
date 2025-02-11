@@ -104,7 +104,52 @@
                         </li>
                     </ul>
                 </li>
-
+                <li class="nav-item @(ViewData["Controller"]?.ToString() == "Slides"?"menu-open":"")">
+                    <a href="#" class="nav-link  @(ViewData["Controller"]?.ToString()=="Slides"?"active":"")">
+                        <i class="nav-icon fas fa-list"></i>
+                        <p>
+                            Intro Slides
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item ">
+                            <a asp-controller="Slides" asp-action="Index" class="nav-link @(ViewData["HeaderTitle"]?.ToString()=="Slides"?"active":"")">
+                                <i class="@(ViewData["HeaderTitle"]?.ToString()=="Slides"?"fas":"far")  fa-circle nav-icon"></i>
+                                <p>Show All</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Slides" asp-action="Create" class="nav-link @(ViewData["HeaderTitle"]?.ToString()=="CreateSlide"?"active":"")">
+                                <i class="@(ViewData["HeaderTitle"]?.ToString()=="CreateSlide"?"fas":"far")  fa-circle nav-icon"></i>
+                                <p>Create</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item @(ViewData["Controller"]?.ToString() == "Cards"?"menu-open":"")">
+                    <a href="#" class="nav-link  @(ViewData["Controller"]?.ToString()=="Cards"?"active":"")">
+                        <i class="nav-icon fas fa-list"></i>
+                        <p>
+                            Cards
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item ">
+                            <a asp-controller="Cards" asp-action="Index" class="nav-link @(ViewData["HeaderTitle"]?.ToString()=="Cards"?"active":"")">
+                                <i class="@(ViewData["HeaderTitle"]?.ToString()=="Cards"?"fas":"far")  fa-circle nav-icon"></i>
+                                <p>Show All</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Cards" asp-action="Create" class="nav-link @(ViewData["HeaderTitle"]?.ToString()=="CreateCard"?"active":"")">
+                                <i class="@(ViewData["HeaderTitle"]?.ToString()=="CreateCard"?"fas":"far")  fa-circle nav-icon"></i>
+                                <p>Create</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

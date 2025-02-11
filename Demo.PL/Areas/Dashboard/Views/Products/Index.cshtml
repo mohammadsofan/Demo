@@ -44,16 +44,16 @@
                     {
                         <tr>
                             <td>
-                                <img src="~/files/images/@item.MainImage" class="img-circle product-img" width="60px" height="60px" />
+                                <img src="~/files/images/@item.MainImage" class="img-circle object-fit-cover" width="60px" height="60px" />
                              </td>
-                            <td>@item.Name</td>
-                            <td>@(item.Description.Length > 15 ? item.Description.Substring(0, 15) + "..." : item.Description)</td>
-                            <td>@item.Price</td>
+                            <td>@(item.Name.Length > 10 ? item.Name.Substring(0, 10) + "..." : item.Name)</td>
+                            <td>@(item.Description.Length > 10 ? item.Description.Substring(0, 10) + "..." : item.Description)</td>
+                            <td>$@item.Price</td>
                             <td class="@(item.InPublish?"text-success":"text-danger")">@(item.InPublish ? "Published" : "UnPublished")</td>
                             <td>@item.Quantity</td>
                             <td>@item.Discount</td>
                             <td>@item.SubCategoryName</td>
-                            <td>@item.CreatedAt.ToLocalTime()</td>
+                            <td>@item.CreatedAt.ToLocalTime().ToShortDateString()</td>
                             <td>
                                 <a class="btn btn-info btn-sm" asp-controller="Products" asp-action="Details" asp-route-id="@item.Id">
                                     <i class="fas fa-clipboard">
@@ -88,11 +88,6 @@
 
 @section Styles {
     <partial name="_DatatablesStyles" />
-    <style>
-        .product-img{
-            object-fit:cover;
-        }
-    </style>
 }
 @section Scripts {
 

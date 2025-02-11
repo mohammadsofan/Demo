@@ -1,0 +1,139 @@
+﻿@model ProductDetailsViewModel
+@{
+    ViewData["Title"] = "Products - Details";
+    ViewData["HeaderTitle"] = "ProductDetails";
+    ViewData["Controller"] = "Products";
+
+}
+<div class="col-12">
+    <a asp-controller="Products" asp-action="Index" class="btn btn-secondary mb-2">
+        <i class="fa fa-sm fa-chevron-left"></i>
+        Back to list
+    </a>
+    <div class="row my-3">
+        <div class="col-12 col-sm-6">
+            <h3 class="d-inline-block d-sm-none">@Model.Name</h3>
+            <div class="col-12">
+                <div class="activeImage">
+                    <img src="~/files/images/@Model.ProductColors[0].Images[0]" class="product-image" alt="Product Image">
+                </div>
+            </div>
+            <div class="col-12 product-image-thumbs">
+                @foreach (var image in Model.ProductColors[0].Images)
+                {
+                    <div class="product-image-thumb"><img src="~/files/images/@image" alt="@image"></div>
+                }
+            </div>
+        </div>
+        <div class="col-12 col-sm-6">
+            <h3 class="my-3">@Model.Name</h3>
+            <p>@Model.Description</p>
+            <hr />
+            <h4>Available Colors</h4>
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                @{
+                    var index = 0;
+                }
+                <label class="btn btn-default text-center color-active">
+                    <input type="radio" name="color_option" class="color" data-index="@index" id="color_option_a1" autocomplete="off" checked>
+                    <i class="fas fa-circle fa-2x" style="color:@Model.ProductColors[0].HexCode"></i>
+                </label>
+      
+                @foreach (var pc in Model.ProductColors.Skip(1))
+                {
+                index++;
+                <label class="btn btn-default text-center">
+                        <input type="radio" name="color_option" class="color" data-index="@index" id="color_option_a1" autocomplete="off">
+                     <i class="fas fa-circle fa-2x" style="color:@pc.HexCode"></i>
+                </label>
+                }
+            </div>
+            <div class="bg-primary py-2 px-3 mt-4 rounded">
+                <h3 class="mb-0">
+                    Category: @Model.Category
+                </h3>
+                <h4 class="mt-0">
+                    Sub Category: @Model.SubCategory
+                </h4>
+
+            </div>
+            <div class="bg-gray py-2 px-3 mt-4 rounded">
+                <h3 class="mb-0">
+                    Price: $@Model.Price
+                </h3>
+                <h3 class="mt-0">
+                    <small>Discount: @(Model.Discount*100)% </small>
+                </h3>
+                <h3 class="mt-0">
+                    Final Price: $@(Model.Price - Model.Discount * Model.Price)
+                </h3>
+            </div>
+            <div class="bg-primary py-2 px-3 mt-4 rounded">
+                <h4 class="mb-0">
+                    In Stock: @Model.Quantity
+                </h4>
+            </div>
+            <div class="bg-gray py-2 px-3 mt-4 rounded">
+                <h6 class="mb-0">
+                    Created At: @Model.CreatedAt
+                </h6>
+                <h6 class="mt-0">
+                    Status: @Model.Status
+                </h6>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+
+        $(document).ready(function () {
+            $('.product-image-thumb').on('click', function () {
+                var $image_element = $(this).find('img')
+                $('.product-image').prop('src', $image_element.attr('src'))
+                $('.product-image-thumb.active').removeClass('active')
+                $(this).addClass('active')
+            })
+        });
+        const colors = document.querySelectorAll(".color");
+        colors.forEach((color) => {
+            color.addEventListener("click",(e) => {
+                colors.forEach((color) => {
+                    color.closest("label").classList.remove("color-active");
+                })
+                e.target.closest("label").classList.add("color-active");
+                var i = e.target.dataset.index;
+                var productColors = @Html.Raw(Json.Serialize(Model.ProductColors.Select((pc, index) => new
+                    {
+                        Images = pc.Images.Select(img => Url.Content("~/files/images/" + img)).ToList()
+                    }).ToList()));
+
+                const activeImage = document.querySelector(".activeImage");
+                activeImage.innerHTML = `
+                        <img src="${productColors[i].images[0]}" class="product-image" alt="Product Image">
+                `;
+                const images = document.querySelector(".product-image-thumbs");
+                images.innerHTML = "";
+                productColors[i].images.forEach((img) => {
+                    images.innerHTML += `
+                       <div class="product-image-thumb"><img src="${img}" alt="Product Image"></div>
+                    `;
+                });
+                
+                $('.product-image-thumb').on('click', function () {
+                    var $image_element = $(this).find('img')
+                    $('.product-image').prop('src', $image_element.attr('src'))
+                    $('.product-image-thumb.active').removeClass('active')
+                    $(this).addClass('active')
+                });
+               
+            })
+        }
+        );
+
+    </script>
+}

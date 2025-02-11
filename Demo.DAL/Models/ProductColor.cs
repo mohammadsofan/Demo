@@ -11,7 +11,7 @@ namespace Demo.DAL.Models
         public Guid Id { get; set; }
         public string HexCode { get; set; } = null!;
         public Guid ProductId { get; set; }
-        public Product Product { get; set; } = null!;
-        public IEnumerable<Image> Images { get; set; } = null!;
+        public virtual Product Product { get; set; } = null!;
+        public virtual IEnumerable<Image> Images { get; set; } = null!;
     }
 }

@@ -1,13 +1,12 @@
-﻿using AutoMapper;
-using Demo.BLL.Interfaces;
+﻿using Demo.BLL.Interfaces;
 using Demo.DAL.Models;
 using Demo.PL.Areas.Dashboard.Services;
-using Demo.PL.Areas.Dashboard.ViewModels;
+using Demo.PL.Areas.Dashboard.ViewModels.Image;
+using Demo.PL.Areas.Dashboard.ViewModels.Product;
+using Demo.PL.Areas.Dashboard.ViewModels.ProductColor;
 using Demo.PL.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Demo.PL.Areas.Dashboard.Controllers
 {
@@ -42,7 +41,6 @@ namespace Demo.PL.Areas.Dashboard.Controllers
                     return View();
                 }
                 ViewBag.Categories = productService.GetCategories(categories);
-
                 var products = await productRepository.GetByCategory(id ?? categories.First().Id);
                 ViewBag.CategoryName = categories.FirstOrDefault(c => c.Id == (id ?? categories.First().Id))?.Name ?? "Unknown Category";
 
@@ -127,7 +125,7 @@ namespace Demo.PL.Areas.Dashboard.Controllers
             }
             catch(InvalidOperationException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
 
         }
@@ -325,6 +323,40 @@ namespace Demo.PL.Areas.Dashboard.Controllers
                 return BadRequest(ex.Message);
             }
 
+        }
+
+        public async Task<IActionResult> Details(Guid? id)
+        {
+            if(id is null)
+            {
+                return BadRequest();
+            }
+            var product = await productRepository.Get(id.Value);
+            if(product is null)
+            {
+                return NotFound();
+            }
+
+            var productVm = new ProductDetailsViewModel()
+            {
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                Quantity = product.Quantity,
+                Status = product.InPublish?"Published":"UnPublished",
+                Discount = product.Discount,
+                Category = product.SubCategory.Category.Name,
+                SubCategory = product.SubCategory.Name,
+                CreatedAt = product.CreatedAt,
+                ProductColors = product.ProductColors.Select(pc => new ProductColorDetailsViewModel()
+                {
+                    HexCode = pc.HexCode,
+                    Images = pc.Images.Select(img => img.Name).ToList(),
+                    
+                }).ToList(),
+
+            };
+            return View(productVm);
         }
 
     }

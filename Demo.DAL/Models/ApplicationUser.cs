@@ -11,7 +11,7 @@ namespace Demo.DAL.Models
     {
         public string Address { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
-        public Cart Cart { get; set; } = null!;
-        public ICollection<Order> Orders { get; set; } = null!;
+        public virtual Cart Cart { get; set; } = null!;
+        public virtual ICollection<Order> Orders { get; set; } = null!;
     }
 }

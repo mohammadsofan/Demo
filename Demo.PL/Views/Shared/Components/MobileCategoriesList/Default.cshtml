@@ -1,0 +1,19 @@
+﻿@using Demo.DAL.Models
+@model IEnumerable<Category>
+<div class="tab-pane fade" id="mobile-cats-tab" role="tabpanel" aria-labelledby="mobile-cats-link">
+    <nav class="mobile-cats-nav">
+        <ul class="mobile-cats-menu">
+            @foreach (var category in Model)
+            {
+
+                <li><a href="#" class="font-weight-bold">@category.Name</a></li>
+                <ul>
+                    @foreach (var subCategory in category.SubCategories)
+                    {
+                        <li><a href="#"> - @subCategory.Name </a></li>
+                    }
+                </ul>
+            }
+        </ul><!-- End .mobile-cats-menu -->
+    </nav><!-- End .mobile-cats-nav -->
+</div><!-- .End .tab-pane -->

@@ -1,0 +1,26 @@
+﻿@model EditCategoryViewModel
+<input type="hidden" asp-for="Image" />
+<div class="form-group">
+    <label asp-for="Name"></label>
+    <input asp-for="Name" class="form-control" placeholder="Name..">
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Description"></label>
+    <input asp-for="Description" class="form-control" placeholder="Description..">
+    <span asp-validation-for="Description" class="text-danger"></span>
+</div>
+<div class="categoryImage">
+    <div class="form-group">
+        <div id="imageContainer" class="d-flex justify-content-evenly flex-wrap">
+            <img class="formImage m-2 rounded" src="~/files/images/@Model.Image" />
+        </div>
+        <div class="d-flex flex-column gap-2 my-2">
+            <div class="custom-file">
+                <input asp-for="NewImage" class="custom-file-input" accept=".jpg,.jpeg,.png,.gif">
+                <label asp-for="NewImage" class="custom-file-label">Choose Images</label>
+            </div>
+            <span asp-validation-for="NewImage" class="text-danger"></span>
+        </div>
+    </div>
+</div>

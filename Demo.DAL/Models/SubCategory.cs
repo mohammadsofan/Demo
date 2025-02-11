@@ -11,10 +11,11 @@ namespace Demo.DAL.Models
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
+        public string Image { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
-        public ICollection<Product> Products { get; set; } = null!;
+        public virtual ICollection<Product> Products { get; set; } = null!;
         public Guid CategoryId { get; set; }
-        public Category Category { get; set; } = null!;
+        public virtual Category Category { get; set; } = null!;
 
     }
 }
