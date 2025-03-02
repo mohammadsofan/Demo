@@ -1,0 +1,274 @@
+﻿@model ShopViewModel
+@{
+    ViewData["Title"] = "Index";
+    // var numberOfPages = (int)Math.Ceiling(Model.ProductsCount / Model.ProductsPerPage);
+}
+
+            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+                        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Shop">Shop</a></li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="page-content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-9 col-xl-4-5col">
+                            <div class="category-banners-slider owl-carousel owl-simple owl-nav-inside" data-toggle="owl"
+                                 data-owl-options='{
+                                    "nav": false,
+                                    "responsive": {
+                                        "768": {
+                                            "nav": true
+                                        }
+                                    }
+                                }'>
+                                <div class="banner banner-poster">
+
+                                    <a href="#">
+                                        <img src="assets/images/demos/demo-13/banners/banner-7.jpg" alt="Banner">
+                                    </a>
+
+                                    <div class="banner-content banner-content-right">
+                                        <h3 class="banner-subtitle"><a href="#">Amazing Value</a></h3><!-- End .banner-subtitle -->
+                                        <h2 class="banner-title"><a href="#">High Performance 4K TVs</a></h2><!-- End .banner-title -->
+                                        <a href="#" class="banner-link">Shop Now <i class="icon-long-arrow-right"></i></a>
+                                    </div><!-- End .banner-content -->
+                                </div><!-- End .banner -->
+
+                                <div class="banner banner-poster">
+                                    <a href="#">
+                                        <img src="assets/images/demos/demo-13/banners/banner-8.jpg" alt="Banner">
+                                    </a>
+
+                                    <div class="banner-content">
+                                        <h3 class="banner-subtitle"><a href="#">Weekend Deal</a></h3><!-- End .banner-subtitle -->
+                                        <h2 class="banner-title"><a href="#">Apple & Accessories</a></h2><!-- End .banner-title -->
+                                        <a href="#" class="banner-link">Shop Now <i class="icon-long-arrow-right"></i></a>
+                                    </div><!-- End .banner-content -->
+                                </div><!-- End .banner -->
+                            </div><!-- End .owl-carousel -->
+
+                            <div class="mb-2"></div><!-- End .mb-2 -->
+
+                            <div class="toolbox">
+                                <div class="toolbox-left">
+                                    <div class="toolbox-info">
+
+                                       <!-- number of Products found -->
+
+                                    </div><!-- End .toolbox-info -->
+                                </div><!-- End .toolbox-left -->
+                            </div><!-- End .toolbox -->
+
+                            <div class="products mb-3">
+                                <div class="row">
+
+                                </div><!-- End .row -->
+                            </div><!-- End .products -->
+
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination">
+
+
+                                </ul>
+                            </nav>
+                        </div><!-- End .col-lg-9 -->
+
+                        <aside class="col-lg-3 col-xl-5col order-lg-first">
+                            <div class="sidebar sidebar-shop">
+                                <div class="widget widget-categories">
+                                    <h3 class="widget-title">Categories</h3><!-- End .widget-title -->
+
+                                    <div class="widget-body">
+                                        <div class="accordion" id="widget-cat-acc">
+                                            <div class="acc-item">
+                                                <h5>
+                                                    <a role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="true" aria-controls="collapse-1" onclick="handleChangeProducts(event,null,null,1,PRODUCTS_PER_PAGE)">
+                                                        All
+                                                    </a>
+                                                </h5>
+                                                <div id="collapse-1" class="collapse show" data-parent="#widget-cat-acc">
+
+                                                </div><!-- End .collapse -->
+                                            </div><!-- End .acc-item -->
+                                            @foreach (var item in Model.Categories)
+                                            {
+                                                <div class="acc-item">
+                                                    <h5>
+                                                        <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-@item.Id" aria-expanded="false" aria-controls="collapse-@item.Id">
+                                                            @item.Name
+                                                        </a>
+                                                    </h5>
+                                                    <div id="collapse-@item.Id" class="collapse" data-parent="#widget-cat-acc">
+                                                        <div class="collapse-wrap">
+                                                            <ul>
+                                                                <li><a href="#" onclick="handleChangeProducts(event,'@item.Id',null,1,PRODUCTS_PER_PAGE)">All</a></li>
+
+                                                                @foreach (var sc in item.SubCategories)
+                                                                {
+                                                                    <li><a href="#" onclick="handleChangeProducts(event,null,'@sc.Id',1,PRODUCTS_PER_PAGE)">@sc.Name</a></li>                                        
+                                                                }
+                                                            </ul>
+                                                        </div><!-- End .collapse-wrap -->
+                                                    </div><!-- End .collapse -->
+                                                </div><!-- End .acc-item -->
+
+
+                                            }
+                                        </div><!-- End .accordion -->
+                                    </div><!-- End .widget-body -->
+                                </div><!-- End .widget -->
+                                <div class="widget widget-banner-sidebar">
+                                    <div class="banner-sidebar-title">ad banner 218 x 430px</div><!-- End .ad-title -->
+
+                                    <div class="banner-sidebar banner-overlay">
+                                        <a href="#">
+                                            <img src="assets/images/demos/demo-13/banners/banner-6.jpg" alt="banner">
+                                        </a>
+                                    </div><!-- End .banner-ad -->
+                                </div><!-- End .widget -->
+                            </div><!-- End .sidebar sidebar-shop -->
+                        </aside><!-- End .col-lg-3 -->
+                    </div><!-- End .row -->
+                </div><!-- End .container -->
+            </div><!-- End .page-content -->
+
+            <div class="cta cta-horizontal cta-horizontal-box bg-primary">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-5">
+                            <h3 class="cta-title text-white">Join Our Newsletter</h3><!-- End .cta-title -->
+                            <p class="cta-desc text-white">Subcribe to get information about products and coupons</p><!-- End .cta-desc -->
+                        </div><!-- End .col-lg-5 -->
+
+                        <div class="col-lg-7">
+                            <form action="#">
+                                <div class="input-group">
+                                    <input type="email" class="form-control form-control-white" placeholder="Enter your Email Address" aria-label="Email Adress" required>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-white-2" type="submit"><span>Subscribe</span><i class="icon-long-arrow-right"></i></button>
+                                    </div><!-- .End .input-group-append -->
+                                </div><!-- .End .input-group -->
+                            </form>
+                        </div><!-- End .col-lg-7 -->
+                    </div><!-- End .row -->
+                </div><!-- End .container -->
+            </div><!-- End .cta -->
+
+
+@section Scripts{
+    <script>
+        const PRODUCTS_PER_PAGE = 8;
+        let GetProducts = async (categoryId,subCategoryId,page,pageSize) => {
+            const j = await fetch(`/Shop/GetPaginatedProducts?categoryId=${categoryId}&subCategoryId=${subCategoryId}&page=${page}&pageSize=${pageSize}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            const products = await j.json();
+            return products;
+
+        }
+        let ShowProducts = async (categoryId, subCategoryId, page, pageSize)=>{
+            const result = await GetProducts(categoryId, subCategoryId, page, pageSize);
+            const productsCountContainer = document.querySelector(".toolbox .toolbox-left .toolbox-info");
+            productsCountContainer.innerHTML = `${result.count} Products found`;
+            const productsContainer = document.querySelector(".products .row");
+            const paginationItemsContainer = document.querySelector(".pagination");
+            var numberOfPages = Math.ceil(result.count / PRODUCTS_PER_PAGE);
+            productsContainer.innerHTML = ""; // Clear existing products
+            paginationItemsContainer.innerHTML = ""; // Clear existing pagination
+            if (numberOfPages > 0) {
+                paginationItemsContainer.innerHTML += `
+                        <li class="page-item ${page == 1 ? 'disabled' : ''}">
+                            <a class="page-link page-link-prev"  href="#" aria-label="Previous" tabindex="-1" aria-disabled="true" onclick="handleChangeProducts(event,${categoryId},${subCategoryId},${page - 1},${pageSize})">
+                                <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
+                            </a>
+                        </li>
+                    `;
+                for (let i = 1; i <= numberOfPages; i++) {
+                    paginationItemsContainer.innerHTML += `
+                        <li class="page-item ${i == page ? 'active' : ''}"><a class="page-link" href="#" onclick="handleChangeProducts(event,${categoryId},${subCategoryId},${i},${pageSize})" >${i}</a></li>
+                    `;
+                }
+                paginationItemsContainer.innerHTML += `
+                        <li class="page-item ${page == numberOfPages ? 'disabled' : ''}" >
+                            <a class="page-link page-link-next" href="#" aria-label="Next" onclick="handleChangeProducts(event,${categoryId},${subCategoryId},${page + 1},${pageSize})">
+                                Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+                            </a>
+                        </li>
+                    `;
+            }
+            result.products.forEach((item) => {
+                const createdAt = new Date(item.createdAt);
+                const currentDate = new Date();
+                const daysSinceCreation = (currentDate - createdAt) / (1000 * 60 * 60 * 24);
+                const isOnSale = item.discount > 0;
+                const isNew = daysSinceCreation <= 7;
+                productsContainer.innerHTML += `
+                                        <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                                            <div class="product">
+                                                <figure class="product-media">
+                                                        ${isNew ? '<span class="product-label label-new">New</span>' : ''}
+                                                        ${isOnSale ? '<span class="product-label label-sale">Sale</span>' : ''}
+                                                    <a href="/shop/product/${item.id}">
+                                                        <img src="/files/images/${item.mainImage}" alt="Product image" class="product-image" style="height:180px;object-fit:cover">
+                                                    </a>
+
+                                                    <div class="product-action-vertical">
+                                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                                        <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
+                                                        <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
+                                                    </div><!-- End .product-action-vertical -->
+
+                                                    <div class="product-action">
+                                                        <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
+                                                    </div><!-- End .product-action -->
+                                                </figure><!-- End .product-media -->
+
+                                                <div class="product-body">
+                                                    <div class="product-cat">
+                                                        <a href="#">${item.subCategoryName}</a>
+                                                    </div><!-- End .product-cat -->
+                                                    <h3 class="product-title"><a href="product.html">${item.name}</a></h3><!-- End .product-title -->
+                                                    <div class="product-price">
+
+                                                        ${item.discount > 0 ?`<span class="new-price">$${(item.price - item.price * item.discount).toFixed(2)}</span><span class="old-price">Was $${(item.price).toFixed(2)}</span>`:`<span>$${item.price}</span>`}
+
+
+                                                    </div><!-- End .product-price -->
+                                                    <div class="ratings-container">
+                                                        <div class="ratings">
+                                                            <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
+                                                        </div><!-- End .ratings -->
+                                                        <span class="ratings-text">( 12 Reviews )</span>
+                                                    </div><!-- End .rating-container -->
+                                                </div><!-- End .product-body -->
+                                            </div><!-- End .product -->
+                                        </div><!-- End .col-sm-6 col-md-4 col-xl-3 -->
+                        `;
+            });
+        }
+        async function handleChangeProducts(event, categoryId, subCategoryId, page, pageSize) {
+            event.preventDefault();
+            await ShowProducts(categoryId, subCategoryId, page, pageSize);
+        }
+        document.addEventListener('DOMContentLoaded', async function () {
+            await ShowProducts(null, null, 1, PRODUCTS_PER_PAGE);
+        });
+       
+    </script>
+}   
+@section Styles{
+    <style>
+        .acc-item:first-child a:before{
+            display: none;
+        }
+
+    </style>
+}

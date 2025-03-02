@@ -5,7 +5,6 @@ using Demo.DAL.Models;
 using Demo.PL.Areas.Dashboard.Services;
 using Demo.PL.Mapping;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -30,6 +29,15 @@ namespace Demo.PL
                 options.User.RequireUniqueEmail = true;
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Accounts/Login";
+                options.AccessDeniedPath = "/Accounts/AccessDenied";
+            });
+            builder.Logging.AddConsole();
+            builder.Logging.AddFile();
+           
+            
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();

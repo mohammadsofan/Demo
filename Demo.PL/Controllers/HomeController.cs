@@ -26,6 +26,7 @@ namespace Demo.PL.Controllers
 
         public async Task<IActionResult> Index()
         {
+            
             var slides = await slideRepository.GetAll();
             var categories = await categoryRepository.GetPopular();
             var cardsSectionA = await cardRepository.GetAllSectionA();

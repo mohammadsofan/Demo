@@ -76,6 +76,63 @@ namespace Demo.BLL.Repositories
                 throw new InvalidOperationException("An error occurred while retrieving the products. Please try again later.", ex);
             }
         }
+        public async Task<int> GetPaginationProductsCount(Guid? categoryId, Guid? subCategoryId)
+        {
+            try
+            {
+                if (subCategoryId.HasValue)
+                {
+                    return await dbContext.Products.Where(p=>p.SubCategoryId == subCategoryId).CountAsync();
+                }
+                else if (categoryId.HasValue)
+                {
+                    return await dbContext.Products.Where(p => p.SubCategory.CategoryId == categoryId).CountAsync();
+                }
+                else
+                {
+                    return await dbContext.Products.CountAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("An error occurred while retrieving the products count. Please try again later.", ex);
+            }
+        }
+
+        public async Task<IEnumerable<Product>> GetPaginatedProducts(Guid? categoryId,Guid? subCategoryId,int page,int pageSize)
+        {
+            try
+            {
+                if(page < 1 || pageSize < 1)
+                {
+                    throw new ArgumentException("Page and pageSize must be greater than zero.");
+                }
+                int productsCount;
+                IEnumerable<Product> products;
+                IQueryable<Product> query = dbContext.Products.AsNoTracking().OrderByDescending(p=>p.CreatedAt);
+                if (subCategoryId.HasValue)
+                {
+                    query = query.Where(p => p.SubCategory.Id == subCategoryId);
+                }
+                else if (categoryId.HasValue)
+                {
+                    query = query.Where(p => p.SubCategory.CategoryId == categoryId);
+                }
+                productsCount = await query.CountAsync();
+                if ((page-1) * pageSize >= productsCount)
+                {
+                    return Enumerable.Empty<Product>();
+                }
+                query = query.Skip((page - 1) * pageSize).Take(pageSize);
+                products = await query.ToListAsync();
+
+                return products;
+            }
+            catch (Exception ex)
+            {
+                return Enumerable.Empty<Product>();
+            }
+        }
 
         public async Task<int> Update(Product product)
         {

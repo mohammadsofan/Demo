@@ -16,16 +16,27 @@ namespace Demo.PL.Areas.Dashboard.Controllers
     {
         private readonly ICardRepository cardRepository;
         private readonly IMapper mapper;
+        private readonly ILogger<CardsController> logger;
 
-        public CardsController(ICardRepository cardRepository,IMapper mapper) {
+        public CardsController(ICardRepository cardRepository,IMapper mapper,ILogger<CardsController> logger) {
             this.cardRepository = cardRepository;
             this.mapper = mapper;
+            this.logger = logger;
         }
         public async Task<IActionResult> Index()
         {
-            var cards = await cardRepository.GetAll();
-            var cardsVM = mapper.Map<IEnumerable<CardViewModel>>(cards);
-            return View(cardsVM);
+            try
+            {
+                logger.Log(LogLevel.Information,"the admin {adminName} enterd the cards index page", User.Identity.Name);
+                var cards = await cardRepository.GetAll();
+                var cardsVM = mapper.Map<IEnumerable<CardViewModel>>(cards);
+                return View(cardsVM);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
         }
 
         public IActionResult Create()

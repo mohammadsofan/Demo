@@ -10,6 +10,8 @@ namespace Demo.BLL.Interfaces
      public interface IProductRepository
     {
         Task<IEnumerable<Product>> GetByCategory(Guid categoryId);
+        Task<int> GetPaginationProductsCount(Guid? categoryId, Guid? subCategoryId);
+        Task<IEnumerable<Product>> GetPaginatedProducts(Guid? categoryId, Guid? subCategoryId, int page, int pageSize);
         Task<Product?> Get(Guid id);
         Task<int> Create(Product product);
         Task<int> Update(Product product);
